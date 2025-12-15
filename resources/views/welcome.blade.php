@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Walk At wall Clouds</title>
+        <title>Walk At wall Cloud</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
