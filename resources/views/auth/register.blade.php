@@ -72,7 +72,7 @@
             </form>
         </div>
     </main>
-    <footer class="bg-black py-10 border-t border-white/5">
+         <footer class="bg-black py-10 border-t border-white/5">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <p class="text-gray-500 text-sm">&copy; 2025 WalkAtWallClouds. All rights reserved.</p>
         </div>
