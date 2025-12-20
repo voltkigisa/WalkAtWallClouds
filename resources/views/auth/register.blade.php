@@ -1,10 +1,17 @@
 <?php $title = 'Register'; ?>
-<x-layout :$title>
+<div>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
 
     <main class="bg-gray-900 min-h-screen flex flex-col justify-center py-12 px-6">
-        <div class="text-white max-w-md mx-auto w-full bg-black p-8 rounded-lg shadow-xl border border-gray-800">
+        
+        <div class="relative text-white max-w-md mx-auto w-full bg-black p-8 rounded-lg shadow-xl border border-gray-800">
+            
+            <a href="/login" class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </a>
             <h2 class="text-3xl font-bold mb-2 text-center text-white">Create Account</h2> 
             <p class="text-gray-400 text-center mb-8 text-sm">Join WalkAtWallClouds today</p>
 
@@ -72,10 +79,6 @@
             </form>
         </div>
     </main>
-         <footer class="bg-black py-10 border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <p class="text-gray-500 text-sm">&copy; 2025 WalkAtWallClouds. All rights reserved.</p>
-        </div>
-    </footer>
+        
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
-</x-layout>
+</div>
