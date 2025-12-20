@@ -1,6 +1,6 @@
 <?php $title = 'Login'; ?>
 <x-layout :$title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></scrip
 
     <body class="bg-gray-900 min-h-screen flex flex-col">
         
