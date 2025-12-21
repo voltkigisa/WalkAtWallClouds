@@ -7,33 +7,37 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-	public function show()
-	{
-		return view('auth.login');
-	}
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
 
-	public function login(Request $request)
-	{
-		$credentials = $request->validate([
-			'email' => ['required', 'email'],
-			'password' => ['required'],
-		]);
+    public function login(Request $request)
+    {
+        //validasi input
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-		if (Auth::attempt($credentials, $request->filled('remember'))) {
-			$request->session()->regenerate();
-			return redirect()->intended('/');
-		}
+        //login user
+        if (Auth::attempt($request->only('email', 'password'))) {
+            //login berhasil
+            $request->session()->regenerate();
+            return redirect()->intended('/');
+        }
 
-		throw ValidationException::withMessages([
-			'email' => __('auth.failed'),
-		]);
-	}
+        //login gagal
+        return back()->withErrors([
+            'email' => 'Email or password is incorrect!'
+        ]);
+    }
 
-	public function logout(Request $request)
-	{
-		Auth::logout();
-		$request->session()->invalidate();
-		$request->session()->regenerateToken();
-		return redirect()->route('login');
-	}
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    }
 }

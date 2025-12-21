@@ -14,7 +14,7 @@ Route::get('/', function () {
 
 // Authentication routes
 Route::middleware('guest')->group(function () {
-    Route::get('login', [LoginController::class, 'show'])->name('login');
+    Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [LoginController::class, 'login'])->name('login.attempt');
     
     Route::get('register', function () {
@@ -34,9 +34,8 @@ Route::middleware('guest')->group(function () {
             'password' => Hash::make($data['password']),
         ]);
 
-        Auth::login($user);
 
-        return redirect('/');
+        return redirect('/login');
     })->name('register.store');
 });
 
