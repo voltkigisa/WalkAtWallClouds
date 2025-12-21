@@ -12,31 +12,13 @@ Route::get('/', function () {
 });
 
 
-// Authentication routes
-Route::middleware('guest')->group(function () {
-    Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [LoginController::class, 'login'])->name('login.attempt');
-    
-    Route::get('register', function () {
-        return view('auth.register');
-    })->name('register');
+//Route untuk register - middleware guest (hanya untuk yg belum login)
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->middleware('guest')->name('register');
+Route::post('/register', [RegisterController::class, 'register'])->middleware('guest');
 
-    Route::post('register', function () {
-        $data = request()->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
-        ]);
+//Route untuk login - middleware guest (hanya untuk yg belum login)
+Route::get('/login', [LoginController::class, 'showLoginForm'])->middleware('guest')->name('login');
+Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
 
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
-
-
-        return redirect('/login');
-    })->name('register.store');
-});
-
-Route::post('logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
+//Route untuk logout - hanya untuk yg sudah login
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
