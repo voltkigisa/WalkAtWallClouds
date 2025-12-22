@@ -1,43 +1,61 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
+    // tampilkan form login
     public function showLoginForm()
     {
+        // kalau sudah login, langsung redirect sesuai role
+        if (Auth::check()) {
+            return Auth::user()->role === 'admin'
+                ? redirect('/admin/dashboard')
+                : redirect('/');
+        }
+
         return view('auth.login');
     }
 
+    // proses login
     public function login(Request $request)
     {
-        //validasi input
+        // validasi input
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        //login user
+        // attempt login
         if (Auth::attempt($request->only('email', 'password'))) {
-            //login berhasil
+            // regenerate session
             $request->session()->regenerate();
-            return redirect()->intended('/');
+
+            // redirect berdasarkan role
+            if (Auth::user()->role === 'admin') {
+                return redirect('/admin/dashboard');
+            }
+
+            return redirect('/');
         }
 
-        //login gagal
+        // login gagal
         return back()->withErrors([
             'email' => 'Email or password is incorrect!'
         ]);
     }
 
+    // logout
     public function logout(Request $request)
     {
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+
+        return redirect('/login');
     }
 }
