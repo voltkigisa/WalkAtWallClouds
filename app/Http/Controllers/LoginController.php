@@ -10,7 +10,6 @@ class LoginController extends Controller
     // tampilkan form login
     public function showLoginForm()
     {
-        // kalau sudah login, langsung redirect sesuai role
         if (Auth::check()) {
             return Auth::user()->role === 'admin'
                 ? redirect('/admin/dashboard')
@@ -34,18 +33,18 @@ class LoginController extends Controller
             // regenerate session
             $request->session()->regenerate();
 
-            // redirect berdasarkan role
+            // redirect berdasarkan role + Tambahkan pesan 'success'
             if (Auth::user()->role === 'admin') {
-                return redirect('/admin/dashboard');
+                return redirect('/admin/dashboard')->with('success', 'Login Berhasil! Selamat Datang Admin.');
             }
 
-            return redirect('/');
+            return redirect('/')->with('success', 'Login Berhasil! Selamat Datang.');
         }
 
-        // login gagal
+        // login gagal (Pop-up error akan otomatis muncul karena withErrors)
         return back()->withErrors([
             'email' => 'Email or password is incorrect!'
-        ]);
+        ])->withInput($request->only('email'));
     }
 
     // logout
@@ -56,6 +55,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect('/login')->with('success', 'Anda telah berhasil logout.');
     }
 }

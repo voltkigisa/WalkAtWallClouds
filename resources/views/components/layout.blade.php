@@ -37,9 +37,19 @@
                         <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-500 text-[10px] font-bold text-white">0</span>
                     </button>
 
-                    <a href="{{ route('login') }}" class="hidden sm:block rounded-md bg-indigo-600 px-5 py-2 text-sm font-bold text-white hover:bg-indigo-700 transition">
-                        Login
-                    </a>
+                    @guest
+                        <a href="{{ route('login') }}" class="hidden sm:block rounded-md bg-indigo-600 px-5 py-2 text-sm font-bold text-white hover:bg-indigo-700 transition">
+                            Login
+                        </a>
+                    @else
+                        <div class="hidden sm:flex items-center gap-3">
+                            <span class="text-gray-200 font-semibold">{{ auth()->user()->name }}</span>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition">Logout</button>
+                            </form>
+                        </div>
+                    @endguest
 
                     <button id="menu-btn" class="md:hidden text-gray-400 hover:text-white focus:outline-none">
                         <svg id="menu-icon" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
