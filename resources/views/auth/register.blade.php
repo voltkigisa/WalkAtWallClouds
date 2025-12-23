@@ -56,15 +56,16 @@
                 <div>
                     <label for="password" class="block mb-2 text-sm font-semibold text-white">Password</label>
                     <input type="password" name="password" id="password" 
-                        class="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 placeholder-gray-500" 
-                        placeholder="••••••••" required>
+                    class="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 placeholder-gray-500" 
+                    placeholder="••••••••" required>
                 </div>
 
                 <div>
                     <label for="password_confirmation" class="block mb-2 text-sm font-semibold text-white">Confirm Password</label>
                     <input type="password" name="password_confirmation" id="password_confirmation" 
-                        class="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 placeholder-gray-500" 
-                        placeholder="••••••••" required>
+                    class="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 placeholder-gray-500" 
+                    placeholder="••••••••" required>
+                    <p id="password-error" class="text-xs text-red-500 mt-2 hidden">⚠️ Passwords do not match!</p>
                 </div>
 
                 <button type="submit" 
@@ -78,6 +79,23 @@
                 </p>
             </form>
         </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: '{{ session('success') }}',
+                    background: '#111827', 
+                    color: '#ffffff',
+                    showConfirmButton: false,
+                    timer: 2500, 
+                    timerProgressBar: true,
+                });
+            @endif
+        });
+    </script>
     </main>
         
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>

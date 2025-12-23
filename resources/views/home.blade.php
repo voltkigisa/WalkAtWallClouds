@@ -174,8 +174,28 @@
                 </div>
             </div>
         </section>
-    </main>
 
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: '{{ session('success') }}',
+                    background: '#111827', 
+                    color: '#ffffff',
+                    showConfirmButton: false,
+                    timer: 2500, 
+                    timerProgressBar: true,
+                });
+            @endif
+        });
+    </script>
+</body>
+    </main>
     @push('scripts')
         @vite(['resources/js/carousel.js'])
     @endpush

@@ -7,6 +7,7 @@
     <title>{{ $title ?? 'WalkAtWallClouds' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     
 
     @stack('styles')
@@ -68,10 +69,46 @@
     </main>
     @stack('scripts')
 
-    <footer class="bg-black py-10 border-t border-white/5 text-center">
-        <p class="text-gray-500 text-sm">&copy; 2025 WalkAtWallClouds. All rights reserved.</p>
-    </footer>
+   <footer class="bg-black py-12 border-t border-white/5 text-center">
+    <div class="max-w-screen-xl mx-auto px-4">
+        
+        <div class="flex justify-center items-center gap-6 md:gap-10 mb-8">
+            <a href="https://instagram.com/WalkAtWallClouds.id" target="_blank" class="group flex flex-col items-center gap-2">
+                <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-900 group-hover:bg-gradient-to-tr group-hover:from-yellow-400 group-hover:via-red-500 group-hover:to-purple-600 transition-all duration-300">
+                    <i class="fa-brands fa-instagram text-xl text-gray-400 group-hover:text-white"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 group-hover:text-white uppercase tracking-tighter transition-colors">Instagram</span>
+            </a>
 
+            <a href="https://youtube.com/@WalkAtWallClouds.id" target="_blank" class="group flex flex-col items-center gap-2">
+                <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-900 group-hover:bg-red-600 transition-all duration-300">
+                    <i class="fa-brands fa-youtube text-xl text-gray-400 group-hover:text-white"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 group-hover:text-white uppercase tracking-tighter transition-colors">YouTube</span>
+            </a>
+
+            <a href="https://x.com/WalkAtWallClouds.id" target="_blank" class="group flex flex-col items-center gap-2">
+                <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-900 group-hover:bg-white transition-all duration-300">
+                    <i class="fa-brands fa-x-twitter text-xl text-gray-400 group-hover:text-black"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 group-hover:text-white uppercase tracking-tighter transition-colors">Twitter</span>
+            </a>
+
+            <a href="https://facebook.com/WalkAtWallClouds.id" target="_blank" class="group flex flex-col items-center gap-2">
+                <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-900 group-hover:bg-blue-600 transition-all duration-300">
+                    <i class="fa-brands fa-facebook text-xl text-gray-400 group-hover:text-white"></i>
+                </div>
+                <span class="text-[10px] font-bold text-gray-500 group-hover:text-white uppercase tracking-tighter transition-colors">Facebook</span>
+            </a>
+        </div>
+
+        <div class="h-px w-20 bg-indigo-500 mx-auto mb-6"></div>
+        
+        <p class="text-gray-600 text-[10px] tracking-widest uppercase font-medium">
+            &copy; 2025 WalkAtWallClouds. All rights reserved.
+        </p>
+    </div>
+</footer>
      <script src="{{ asset('js/navbar.js') }}"></script>
 </body>
 </html>
