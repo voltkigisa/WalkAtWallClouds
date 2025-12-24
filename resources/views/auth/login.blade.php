@@ -1,5 +1,5 @@
 <?php $title = 'Login'; ?>
-<x-layout :$title>
+<div>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <main class="bg-gray-900 min-h-screen flex items-center justify-center">
@@ -66,20 +66,6 @@
                     confirmButtonColor: '#2563eb' // Blue-600
                 });
             @endif
-
-            // 2. Pop-up Sukses (Berhasil Login)
-            // Dipicu jika Controller mengirim redirect()->with('success', '...')
-            @if (session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: '{{ session('success') }}',
-                    background: '#111827',
-                    color: '#ffffff',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-            @endif
         });
     </script>
-</x-layout>
+</div>
