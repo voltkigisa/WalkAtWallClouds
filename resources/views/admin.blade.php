@@ -1,5 +1,5 @@
 <?php $title = 'Admin Dashboard'; ?>
-<x-layout :$title>
+<x-admin-layout :$title>
     <script src="https://cdn.tailwindcss.com"></script>
 
     <div class="flex min-h-screen bg-gray-900 text-white font-sans">
@@ -141,4 +141,4 @@
         </div>
     </div>
 
-    </x-layout>
+    </x-admin-layout>
