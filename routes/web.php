@@ -15,6 +15,7 @@ use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketTypeController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Middleware\AdminMiddleware;
 
 /*
@@ -25,6 +26,10 @@ use App\Http\Middleware\AdminMiddleware;
 Route::get('/', function () {
     return view('home');
 });
+
+// ===== TICKET PURCHASE =====
+Route::get('/ticket', [CheckoutController::class, 'index'])->name('purchase.index');
+Route::get('/ticket/{ticketType}', [CheckoutController::class, 'show'])->name('purchase.show');
 
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +99,10 @@ Route::middleware('guest')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    
+    // ===== CHECKOUT - Only for authenticated users =====
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/order/{order}/confirmation', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
 });
 
 /*
