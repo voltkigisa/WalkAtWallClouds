@@ -11,7 +11,7 @@ class UpdateArtistRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class UpdateArtistRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'genre' => 'required|string|max:255',
+            'photo' => 'nullable|string',
         ];
     }
 }

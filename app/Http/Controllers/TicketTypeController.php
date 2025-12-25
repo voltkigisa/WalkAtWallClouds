@@ -13,7 +13,7 @@ class TicketTypeController extends Controller
      */
     public function index()
     {
-        $ticketTypes = TicketType::all();
+        $ticketTypes = TicketType::with('event')->get();
         return view('ticket-types.index', compact('ticketTypes'));
     }
 
