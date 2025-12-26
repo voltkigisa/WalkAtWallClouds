@@ -13,7 +13,8 @@ class TicketTypeController extends Controller
      */
     public function index()
     {
-        //
+        $ticketTypes = TicketType::with('event')->get();
+        return view('ticket-types.index', compact('ticketTypes'));
     }
 
     /**
@@ -21,7 +22,7 @@ class TicketTypeController extends Controller
      */
     public function create()
     {
-        //
+        return view('ticket-types.create');
     }
 
     /**
@@ -29,7 +30,8 @@ class TicketTypeController extends Controller
      */
     public function store(StoreTicketTypeRequest $request)
     {
-        //
+        TicketType::create($request->validated());
+        return redirect()->route('ticket-types.index')->with('success', 'Ticket Type berhasil ditambahkan');
     }
 
     /**
@@ -37,7 +39,7 @@ class TicketTypeController extends Controller
      */
     public function show(TicketType $ticketType)
     {
-        //
+        return view('ticket-types.show', compact('ticketType'));
     }
 
     /**
@@ -45,7 +47,7 @@ class TicketTypeController extends Controller
      */
     public function edit(TicketType $ticketType)
     {
-        //
+        return view('ticket-types.edit', compact('ticketType'));
     }
 
     /**
@@ -53,7 +55,8 @@ class TicketTypeController extends Controller
      */
     public function update(UpdateTicketTypeRequest $request, TicketType $ticketType)
     {
-        //
+        $ticketType->update($request->validated());
+        return redirect()->route('ticket-types.show', $ticketType)->with('success', 'Ticket Type berhasil diperbarui');
     }
 
     /**
@@ -61,6 +64,7 @@ class TicketTypeController extends Controller
      */
     public function destroy(TicketType $ticketType)
     {
-        //
+        $ticketType->delete();
+        return redirect()->route('ticket-types.index')->with('success', 'Ticket Type berhasil dihapus');
     }
 }
