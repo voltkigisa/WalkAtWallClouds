@@ -13,7 +13,8 @@ class OrderItemController extends Controller
      */
     public function index()
     {
-        //
+        $orderItems = OrderItem::with(['order.user', 'ticketType'])->get();
+        return view('order-items.index', compact('orderItems'));
     }
 
     /**
@@ -21,7 +22,7 @@ class OrderItemController extends Controller
      */
     public function create()
     {
-        //
+        return view('order-items.create');
     }
 
     /**
@@ -29,7 +30,8 @@ class OrderItemController extends Controller
      */
     public function store(StoreOrderItemRequest $request)
     {
-        //
+        OrderItem::create($request->validated());
+        return redirect()->route('order-items.index')->with('success', 'Order Item berhasil ditambahkan');
     }
 
     /**
@@ -37,7 +39,7 @@ class OrderItemController extends Controller
      */
     public function show(OrderItem $orderItem)
     {
-        //
+        return view('order-items.show', compact('orderItem'));
     }
 
     /**
@@ -45,7 +47,7 @@ class OrderItemController extends Controller
      */
     public function edit(OrderItem $orderItem)
     {
-        //
+        return view('order-items.edit', compact('orderItem'));
     }
 
     /**
@@ -53,7 +55,8 @@ class OrderItemController extends Controller
      */
     public function update(UpdateOrderItemRequest $request, OrderItem $orderItem)
     {
-        //
+        $orderItem->update($request->validated());
+        return redirect()->route('order-items.show', $orderItem)->with('success', 'Order Item berhasil diperbarui');
     }
 
     /**
@@ -61,6 +64,7 @@ class OrderItemController extends Controller
      */
     public function destroy(OrderItem $orderItem)
     {
-        //
+        $orderItem->delete();
+        return redirect()->route('order-items.index')->with('success', 'Order Item berhasil dihapus');
     }
 }
