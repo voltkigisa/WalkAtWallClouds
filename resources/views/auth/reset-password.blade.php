@@ -6,7 +6,6 @@
     <title>Reset Password</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
 <body>
 
 <main class="bg-gray-900 min-h-screen flex items-center justify-center">
@@ -63,4 +62,34 @@
             </button>
         </form>
     </div>
-</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if ($errors->any())
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Reset Password Gagal',
+        text: '{{ $errors->first() }}',
+        background: '#111827',
+        color: '#ffffff',
+        confirmButtonColor: '#2563eb'
+    });
+</script>
+@endif
+
+@if (session('status'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: '{{ session('status') }}',
+        background: '#111827',
+        color: '#ffffff',
+        confirmButtonColor: '#2563eb'
+    });
+</script>
+@endif
+</body>
+</html>
