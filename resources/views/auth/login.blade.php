@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <a href="#" class="text-blue-400 hover:underline font-semibold text-xs uppercase">
+                    <a href="{{ route('password.request') }}" class="text-blue-400 hover:underline font-semibold text-xs uppercase">
                         Forgot Password?
                     </a>
                 </div>
