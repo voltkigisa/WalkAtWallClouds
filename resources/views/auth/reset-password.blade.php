@@ -1,39 +1,95 @@
-<div>
-    <div class="min-h-[80vh] flex items-center justify-center px-4">
-        <div class="max-w-md w-full bg-black/50 backdrop-blur-lg p-8 rounded-3xl border border-white/10 shadow-2xl">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-extrabold text-white">New Password</h2>
-                <p class="text-gray-400 mt-2 text-sm">Enter your new password for your WalkAtWallClouds account.</p>
+<?php $title = 'Reset Password'; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reset Password</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+<main class="bg-gray-900 min-h-screen flex items-center justify-center">
+    <div class="relative text-white w-full max-w-md bg-black p-10 rounded-lg shadow-md border border-gray-800">
+
+        {{-- Close --}}
+        <a href="{{ route('login') }}"
+           class="absolute top-4 right-4 text-gray-400 hover:text-white transition">
+            ✕
+        </a>
+
+        <h2 class="text-2xl font-bold mb-6 text-center uppercase tracking-wider">
+            Reset Password
+        </h2>
+
+        <form method="POST" action="{{ route('password.update') }}">
+            @csrf
+
+            {{-- TOKEN WAJIB --}}
+            <input type="hidden" name="token" value="{{ request()->route('token') }}">
+
+            {{-- EMAIL --}}
+            <div class="mb-4">
+                <label class="block text-sm font-semibold uppercase mb-2">
+                    Email Address
+                </label>
+                <input type="email" name="email"
+                       value="{{ old('email', request('email')) }}"
+                       required
+                       class="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white">
             </div>
 
-            <form action="{{ route('password.update') }}" method="POST" class="space-y-6">
-                @csrf
-                <input type="hidden" name="token" value="{{ $token }}">
+            {{-- PASSWORD --}}
+            <div class="mb-4">
+                <label class="block text-sm font-semibold uppercase mb-2">
+                    New Password
+                </label>
+                <input type="password" name="password" required
+                       class="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white">
+            </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">Email</label>
-                    <input type="email" name="email" value="{{ old('email') }}" required
-                        class="w-full bg-gray-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                        placeholder="Enter your email">
-                    @error('email') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
-                </div>
+            {{-- CONFIRM PASSWORD --}}
+            <div class="mb-6">
+                <label class="block text-sm font-semibold uppercase mb-2">
+                    Confirm Password
+                </label>
+                <input type="password" name="password_confirmation" required
+                       class="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white">
+            </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">New Password</label>
-                    <input type="password" name="password" required
-                        class="w-full bg-gray-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">Confirm Password</label>
-                    <input type="password" name="password_confirmation" required
-                        class="w-full bg-gray-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
-                </div>
-
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-indigo-500/20">
-                    Update Password
-                </button>
-            </form>
-        </div>
+            <button type="submit"
+                class="w-full bg-blue-600 py-3 rounded-lg font-bold uppercase tracking-widest hover:bg-blue-700 transition">
+                Reset Password
+            </button>
+        </form>
     </div>
-</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if ($errors->any())
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Reset Password Gagal',
+        text: '{{ $errors->first() }}',
+        background: '#111827',
+        color: '#ffffff',
+        confirmButtonColor: '#2563eb'
+    });
+</script>
+@endif
+
+@if (session('status'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: '{{ session('status') }}',
+        background: '#111827',
+        color: '#ffffff',
+        confirmButtonColor: '#2563eb'
+    });
+</script>
+@endif
+</body>
+</html>
