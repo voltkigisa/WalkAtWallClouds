@@ -9,6 +9,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArtistController;
+use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\TicketTypeController;
 use App\Http\Middleware\AdminMiddleware;
 
@@ -99,5 +100,6 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin');
     Route::resource('artists', ArtistController::class);
+    Route::resource('order-items', OrderItemController::class);
     Route::resource('ticket-types', TicketTypeController::class);
 });
