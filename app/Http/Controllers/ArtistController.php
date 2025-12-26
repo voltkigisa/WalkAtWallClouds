@@ -13,7 +13,8 @@ class ArtistController extends Controller
      */
     public function index()
     {
-        //
+        $artists = Artist::all();
+        return view('artists.index', compact('artists'));
     }
 
     /**
@@ -21,7 +22,7 @@ class ArtistController extends Controller
      */
     public function create()
     {
-        //
+        return view('artists.create');
     }
 
     /**
@@ -29,7 +30,8 @@ class ArtistController extends Controller
      */
     public function store(StoreArtistRequest $request)
     {
-        //
+        Artist::create($request->validated());
+        return redirect()->route('artists.index')->with('success', 'Artist berhasil ditambahkan');
     }
 
     /**
@@ -37,7 +39,7 @@ class ArtistController extends Controller
      */
     public function show(Artist $artist)
     {
-        //
+        return view('artists.show', compact('artist'));
     }
 
     /**
@@ -45,7 +47,7 @@ class ArtistController extends Controller
      */
     public function edit(Artist $artist)
     {
-        //
+        return view('artists.edit', compact('artist'));
     }
 
     /**
@@ -53,7 +55,8 @@ class ArtistController extends Controller
      */
     public function update(UpdateArtistRequest $request, Artist $artist)
     {
-        //
+        $artist->update($request->validated());
+        return redirect()->route('artists.show', $artist)->with('success', 'Artist berhasil diperbarui');
     }
 
     /**
@@ -61,6 +64,7 @@ class ArtistController extends Controller
      */
     public function destroy(Artist $artist)
     {
-        //
+        $artist->delete();
+        return redirect()->route('artists.index')->with('success', 'Artist berhasil dihapus');
     }
 }
