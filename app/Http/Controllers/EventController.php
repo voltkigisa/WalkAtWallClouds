@@ -13,7 +13,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
+        $events = Event::all();
+        return view('events.index', compact('events'));
     }
 
     /**
@@ -21,7 +22,7 @@ class EventController extends Controller
      */
     public function create()
     {
-        //
+        return view('events.create');
     }
 
     /**
@@ -29,7 +30,8 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
-        //
+        Event::create($request->validated());
+        return redirect()->route('events.index')->with('success', 'Event berhasil ditambahkan');
     }
 
     /**
@@ -37,7 +39,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        //
+        return view('events.show', compact('event'));
     }
 
     /**
@@ -45,7 +47,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        //
+        return view('events.edit', compact('event'));
     }
 
     /**
@@ -53,7 +55,8 @@ class EventController extends Controller
      */
     public function update(UpdateEventRequest $request, Event $event)
     {
-        //
+        $event->update($request->validated());
+        return redirect()->route('events.show', $event)->with('success', 'Event berhasil diperbarui');
     }
 
     /**
@@ -61,6 +64,7 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        //
+        $event->delete();
+        return redirect()->route('events.index')->with('success', 'Event berhasil dihapus');
     }
 }
