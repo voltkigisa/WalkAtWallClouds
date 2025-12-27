@@ -177,23 +177,22 @@
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    @if (session('success'))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            
-            @if (session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: '{{ session('success') }}',
-                    background: '#111827', 
-                    color: '#ffffff',
-                    showConfirmButton: false,
-                    timer: 2500, 
-                    timerProgressBar: true,
-                });
-            @endif
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session("success") }}',
+                background: '#111827', 
+                color: '#ffffff',
+                showConfirmButton: false,
+                timer: 2500, 
+                timerProgressBar: true,
+            });
         });
     </script>
+    @endif
 </body>
     </main>
     @push('scripts')
