@@ -24,7 +24,6 @@ use App\Models\Artist;
 //  LIVE SEARCH DASHBOARD
 use App\Http\Controllers\Admin\SearchDashboardController;
 
-use App\Http\Middleware\AdminMiddleware;
 
 /*
 |--------------------------------------------------------------------------
