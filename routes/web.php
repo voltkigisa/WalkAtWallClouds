@@ -18,6 +18,7 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketTypeController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\SocialAuthController;
+use App\Models\Artist;
 
 //  LIVE SEARCH DASHBOARD
 use App\Http\Controllers\Admin\SearchDashboardController;
@@ -30,7 +31,8 @@ use App\Http\Middleware\AdminMiddleware;
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
-    return view('home');
+    $artists = Artist::all();
+    return view('home', compact('artists'));
 });
 
 // ===== TICKET PURCHASE =====

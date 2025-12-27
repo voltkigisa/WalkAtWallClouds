@@ -21,6 +21,7 @@
                 <th>Name</th>
                 <th>Country</th>
                 <th>Genre</th>
+                <th>Events</th>
                 <th>Photo</th>
                 <th>Actions</th>
             </tr>
@@ -32,7 +33,20 @@
                     <td>{{ $artist->name }}</td>
                     <td>{{ $artist->country }}</td>
                     <td>{{ $artist->genre }}</td>
-                    <td>{{ $artist->photo }}</td>
+                    <td>
+                        @if($artist->events->count() > 0)
+                            {{ $artist->events->pluck('title')->join(', ') }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
+                        @if($artist->photo)
+                            <img src="{{ asset('storage/'.$artist->photo) }}" alt="{{ $artist->name }}" style="max-width: 50px;">
+                        @else
+                            -
+                        @endif
+                    </td>
                     <td>
                         <a href="{{ route('artists.show', $artist->id) }}">View</a> |
                         <a href="{{ route('artists.edit', $artist->id) }}">Edit</a> |
@@ -45,7 +59,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6">Tidak ada data artist</td>
+                    <td colspan="7">Tidak ada data artist</td>
                 </tr>
             @endforelse
         </tbody>

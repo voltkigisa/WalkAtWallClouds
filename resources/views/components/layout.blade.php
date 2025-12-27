@@ -135,6 +135,16 @@
                         @guest
                             <a href="{{ route('login') }}" class="text-sm font-black uppercase tracking-widest hover:text-indigo-500 transition">Login</a>
                         @else
+                            @if(auth()->user()->role === 'admin')
+                                <a href="{{ route('admin') }}" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-xl transition shadow-lg shadow-indigo-500/20">
+                                    <i class="fa-solid fa-gauge text-white text-sm"></i>
+                                    <span class="text-xs font-black uppercase tracking-widest text-white">Dashboard</span>
+                                </a>
+                            @endif
+                            
+                            <div class="flex items-center gap-3 bg-white/5 border border-white/10 p-1.5 rounded-2xl">
+                                <div class="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-xs">
+                                    {{ substr(auth()->user()->name, 0, 1) }}
                             {{-- MODIFIKASI DISINI: Dropdown Profile --}}
                             <div x-data="{ open: false }" class="relative">
                                 <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 bg-white/5 border border-white/10 p-1.5 rounded-2xl hover:bg-white/10 transition outline-none">

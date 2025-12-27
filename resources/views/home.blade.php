@@ -38,27 +38,13 @@
                 <div class="w-full lg:w-2/3 relative">
                     <div class="relative overflow-hidden rounded-3xl aspect-[16/9] shadow-2xl border border-white/10">
                         <div id="carousel" class="flex transition-transform duration-700 ease-in-out h-full">
+                            @foreach($artists as $artist)
                             <div class="min-w-full h-full relative">
-                                <img src="{{ asset('images/dewa-19.jpeg') }}" class="w-full h-full object-cover" alt="dewa-19">
+                                <img src="{{ asset('storage/'.$artist->photo) }}" class="w-full h-full object-cover" alt="{{ $artist->name }}">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                                 
                             </div>
-                            <div class="min-w-full h-full relative">
-                                <img src="{{ asset('images/panturas.jpeg') }}" class="w-full h-full object-cover" alt="The Panturas">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                                
-                            </div>
-                            <div class="min-w-full h-full relative">
-                                <img src="{{ asset('images/perunggu.jpeg') }}" class="w-full h-full object-cover" alt="Perunggu">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                                
-                            </div>
-
-                            <div class="min-w-full h-full relative">
-                                <img src="{{ asset('images/juicy.jpg') }}" class="w-full h-full object-cover" alt="juicy luicy">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                                
-                            </div>
+                            @endforeach
                         </div>
 
                         <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition">
@@ -83,24 +69,15 @@
                 </section>
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                    @php
-                        $stars = [
-                            ['name' => 'DEWA 19', 'img' => 'dewa-19.jpeg', 'tag' => 'Main Headliner'],
-                            ['name' => 'THE PANTURAS', 'img' => 'panturas.jpeg', 'tag' => 'Special Performance'],
-                            ['name' => 'PERUNGGU', 'img' => 'perunggu.jpeg', 'tag' => 'Indie Rock'],
-                            ['name' => 'JUICY LUICY', 'img' => 'juicy.jpg', 'tag' => 'Pop Jazz'],
-                        ];
-                    @endphp
-
-                    @foreach($stars as $star)
+                    @foreach($artists as $artist)
                     <div class="group cursor-pointer">
                         <div class="relative overflow-hidden rounded-2xl bg-gray-800 aspect-[3/4] mb-4">
-                            <img src="{{ asset('images/'.$star['img']) }}" alt="{{ $star['name'] }}" class="h-full w-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-500">
+                            <img src="{{ asset('storage/'.$artist->photo) }}" alt="{{ $artist->name }}" class="h-full w-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-500">
                             <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded text-[10px] font-bold">
-                                {{ $star['tag'] }}
+                                {{ $artist->genre }}
                             </div>
                         </div>
-                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">{{ $star['name'] }}</h3>
+                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">{{ $artist->name }}</h3>
                     </div>
                     @endforeach
                 </div>

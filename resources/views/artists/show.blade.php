@@ -33,7 +33,27 @@
         </tr>
         <tr>
             <td>Photo</td>
-            <td>{{ $artist->photo }}</td>
+            <td>
+                @if($artist->photo)
+                    <img src="{{ asset('storage/'.$artist->photo) }}" alt="{{ $artist->name }}" style="max-width: 200px;">
+                @else
+                    {{ $artist->photo }}
+                @endif
+            </td>
+        </tr>
+        <tr>
+            <td>Events</td>
+            <td>
+                @if($artist->events->count() > 0)
+                    <ul>
+                        @foreach($artist->events as $event)
+                            <li>{{ $event->title }} - {{ $event->event_date }}</li>
+                        @endforeach
+                    </ul>
+                @else
+                    <em>Belum terdaftar di event manapun</em>
+                @endif
+            </td>
         </tr>
         <tr>
             <td>Created At</td>
