@@ -18,6 +18,7 @@ use App\Http\Controllers\TicketTypeController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\SocialAuthController;
+use App\Models\Artist;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +26,8 @@ use App\Http\Controllers\SocialAuthController;
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
-    return view('home');
+    $artists = Artist::all();
+    return view('home', compact('artists'));
 });
 
 // ===== TICKET PURCHASE =====
