@@ -47,18 +47,13 @@
                 <td><input type="time" id="end_time" name="end_time" value="{{ old('end_time', $event->end_time) }}" required></td>
             </tr>
             <tr>
-                <td><label for="poster">Poster URL:</label></td>
-                <td><input type="text" id="poster" name="poster" value="{{ old('poster', $event->poster) }}" required></td>
-            </tr>
-            <tr>
                 <td><label for="status">Status:</label></td>
                 <td>
                     <select id="status" name="status" required>
                         <option value="">Pilih Status</option>
                         <option value="draft" {{ old('status', $event->status) == 'draft' ? 'selected' : '' }}>Draft</option>
-                        <option value="active" {{ old('status', $event->status) == 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="published" {{ old('status', $event->status) == 'published' ? 'selected' : '' }}>Published</option>
                         <option value="cancelled" {{ old('status', $event->status) == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                        <option value="completed" {{ old('status', $event->status) == 'completed' ? 'selected' : '' }}>Completed</option>
                     </select>
                 </td>
             </tr>

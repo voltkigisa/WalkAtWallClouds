@@ -20,6 +20,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\SocialAuthController;
 use App\Models\Artist;
+use App\Models\Event;
 
 //  LIVE SEARCH DASHBOARD
 use App\Http\Controllers\Admin\SearchDashboardController;
@@ -32,7 +33,8 @@ use App\Http\Controllers\Admin\SearchDashboardController;
 */
 Route::get('/', function () {
     $artists = Artist::all();
-    return view('home', compact('artists'));
+    $event = Event::where('status', 'published')->with('artists')->first();
+    return view('home', compact('artists', 'event'));
 });
 
 // ===== TICKET PURCHASE =====

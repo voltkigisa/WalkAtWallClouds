@@ -8,7 +8,7 @@
                 
                 <div class="w-full lg:w-1/3 text-center lg:text-left z-10">
                     <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-indigo-400 uppercase bg-indigo-400/10 rounded-full mb-4">
-                        Music Festival 2025
+                        Music Festival
                     </span>
                     <div id="text-carousel-info">
                         <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight uppercase tracking-tighter" id="slide-title">
@@ -19,14 +19,20 @@
                         </p>
                     </div>
                     
+                    <div class="mb-8">
+                        <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">
+                            {{ $event ? $event->title : 'WalkAtWallClouds Festival' }}
+                        </h2>
+                    </div>
+                    
                      <div class="flex flex-wrap justify-center md:justify-start gap-4">
                             <div class="bg-black/50 border border-white/10 p-4 rounded-xl min-w-[140px]">
                                 <p class="text-indigo-400 font-bold">DATE</p>
-                                <p class="text-white">20 Feb 2025</p>
+                                <p class="text-white">{{ $event ? \Carbon\Carbon::parse($event->event_date)->format('d M Y') : 'TBA' }}</p>
                             </div>
                             <div class="bg-black/50 border border-white/10 p-4 rounded-xl min-w-[140px]">
                                 <p class="text-indigo-400 font-bold">LOCATION</p>
-                                <p class="text-white">Senayan, Jakarta</p>
+                                <p class="text-white">{{ $event ? $event->location : 'TBA' }}</p>
                             </div>
                         </div>
 
@@ -87,8 +93,20 @@
         <section id="ticket" class="py-20 bg-gray-900 scroll-mt-24">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-white mb-2 tracking-tight uppercase">Get Your Tickets</h2>
+                    <h2 class="text-3xl font-bold text-white mb-2 tracking-tight uppercase">{{ $event ? $event->title : 'Get Your Tickets' }}</h2>
                     <div class="h-1 w-20 bg-indigo-500"></div>
+                    @if($event)
+                        <div class="mt-4 flex gap-6 text-sm">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-calendar text-indigo-400"></i>
+                                <span class="text-gray-400">{{ \Carbon\Carbon::parse($event->event_date)->format('d M Y') }}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-location-dot text-indigo-400"></i>
+                                <span class="text-gray-400">{{ $event->location }}</span>
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="flex flex-col lg:flex-row gap-12 items-start">

@@ -138,30 +138,34 @@
                             @if(auth()->user()->role === 'admin')
                                 <a href="{{ route('admin') }}" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-xl transition shadow-lg shadow-indigo-500/20">
                                     <i class="fa-solid fa-gauge text-white text-sm"></i>
-                                    <span class="text-xs font-black uppercase tracking-widest text-white">Dashboard</span>
+                                    <span class="text-xs font-black uppercase tracking-widest text-white hidden sm:inline">Dashboard</span>
                                 </a>
                             @endif
                             
-                            <div class="flex items-center gap-3 bg-white/5 border border-white/10 p-1.5 rounded-2xl">
-                                <div class="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-xs">
-                                    {{ substr(auth()->user()->name, 0, 1) }}
-                            {{-- MODIFIKASI DISINI: Dropdown Profile --}}
                             <div x-data="{ open: false }" class="relative">
-                                <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 bg-white/5 border border-white/10 p-1.5 rounded-2xl hover:bg-white/10 transition outline-none">
+                                <button @click="open = !open" class="flex items-center gap-3 bg-white/5 border border-white/10 p-1.5 rounded-2xl hover:bg-white/10 transition outline-none">
                                     <div class="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-xs">
                                         {{ substr(auth()->user()->name, 0, 1) }}
                                     </div>
-                                    <span class="text-xs font-bold mr-1">{{ auth()->user()->name }}</span>
+                                    <span class="text-xs font-bold mr-1 hidden sm:inline">{{ auth()->user()->name }}</span>
                                     <i class="fa-solid fa-chevron-down text-[10px] text-gray-500 transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                                 </button>
 
                                 <div x-show="open" 
+                                     @click.away="open = false"
                                      x-transition:enter="transition ease-out duration-100"
                                      x-transition:enter-start="opacity-0 scale-95"
                                      x-transition:enter-end="opacity-100 scale-100"
                                      x-transition:leave="transition ease-in duration-75"
-                                     class="absolute right-0 mt-2 w-48 bg-gray-900 border border-white/10 rounded-2xl shadow-xl z-50 overflow-hidden"
+                                     x-transition:leave-start="opacity-100 scale-100"
+                                     x-transition:leave-end="opacity-0 scale-95"
+                                     class="absolute right-0 mt-2 w-48 bg-gray-900 border border-white/10 rounded-2xl shadow-xl z-[60] overflow-hidden"
                                      style="display: none;">
+                                    
+                                    <div class="px-4 py-3 border-b border-white/5">
+                                        <p class="text-xs font-bold text-white">{{ auth()->user()->name }}</p>
+                                        <p class="text-[10px] text-gray-500">{{ auth()->user()->email }}</p>
+                                    </div>
                                     
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf

@@ -44,10 +44,6 @@
             <td>{{ $event->end_time }}</td>
         </tr>
         <tr>
-            <td>Poster</td>
-            <td>{{ $event->poster }}</td>
-        </tr>
-        <tr>
             <td>Status</td>
             <td>{{ $event->status }}</td>
         </tr>
