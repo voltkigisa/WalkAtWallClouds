@@ -17,47 +17,35 @@ class SocialAuthController extends Controller
     {
         $googleUser = Socialite::driver('google')->user();
 
-        $user = User::updateOrCreate(
-            [
+        // Cek apakah user dengan email ini sudah ada
+        $user = User::where('email', $googleUser->email)->first();
+
+        if ($user) {
+            // Update provider info jika user sudah ada
+            $user->update([
                 'provider' => 'google',
                 'provider_id' => $googleUser->id,
-            ],
-            [
+            ]);
+        } else {
+            // Buat user baru jika belum ada
+            $user = User::create([
                 'name' => $googleUser->name,
                 'email' => $googleUser->email,
                 'password' => bcrypt(uniqid()),
-            ]
-        );
+                'provider' => 'google',
+                'provider_id' => $googleUser->id,
+                'role' => 'user',
+            ]);
+        }
 
         Auth::login($user);
 
-        return redirect('/dashboard');
-    }
+        // Redirect berdasarkan role
+        if ($user->role === 'admin') {
+            return redirect('/admin/dashboard')->with('success', 'Login Berhasil! Selamat Datang Admin.');
+        }
 
-    public function redirectGithub()
-    {
-        return Socialite::driver('github')->redirect();
-    }
-
-    public function callbackGithub()
-    {
-        $githubUser = Socialite::driver('github')->user();
-
-        $user = User::updateOrCreate(
-            [
-                'provider' => 'github',
-                'provider_id' => $githubUser->id,
-            ],
-            [
-                'name' => $githubUser->name ?? $githubUser->nickname,
-                'email' => $githubUser->email,
-                'password' => bcrypt(uniqid()),
-            ]
-        );
-
-        Auth::login($user);
-
-        return redirect('/dashboard');
+        return redirect('/')->with('success', 'Login Berhasil! Selamat Datang.');
     }
 }
 
