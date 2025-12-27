@@ -16,7 +16,9 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketTypeController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderItemController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\SocialAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,3 +136,11 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     // ===== TICKET TYPE CRUD =====
     Route::resource('ticket-types', TicketTypeController::class);
 });
+
+
+
+Route::get('/auth/google', [SocialAuthController::class, 'redirectGoogle']);
+Route::get('/auth/google/callback', [SocialAuthController::class, 'callbackGoogle']);
+
+Route::get('/auth/github', [SocialAuthController::class, 'redirectGithub']);
+Route::get('/auth/github/callback', [SocialAuthController::class, 'callbackGithub']);
