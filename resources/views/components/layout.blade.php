@@ -145,8 +145,32 @@
                             <div class="flex items-center gap-3 bg-white/5 border border-white/10 p-1.5 rounded-2xl">
                                 <div class="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-xs">
                                     {{ substr(auth()->user()->name, 0, 1) }}
+                            {{-- MODIFIKASI DISINI: Dropdown Profile --}}
+                            <div x-data="{ open: false }" class="relative">
+                                <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 bg-white/5 border border-white/10 p-1.5 rounded-2xl hover:bg-white/10 transition outline-none">
+                                    <div class="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-xs">
+                                        {{ substr(auth()->user()->name, 0, 1) }}
+                                    </div>
+                                    <span class="text-xs font-bold mr-1">{{ auth()->user()->name }}</span>
+                                    <i class="fa-solid fa-chevron-down text-[10px] text-gray-500 transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                                </button>
+
+                                <div x-show="open" 
+                                     x-transition:enter="transition ease-out duration-100"
+                                     x-transition:enter-start="opacity-0 scale-95"
+                                     x-transition:enter-end="opacity-100 scale-100"
+                                     x-transition:leave="transition ease-in duration-75"
+                                     class="absolute right-0 mt-2 w-48 bg-gray-900 border border-white/10 rounded-2xl shadow-xl z-50 overflow-hidden"
+                                     style="display: none;">
+                                    
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-red-400 hover:bg-red-500/10 transition group text-left">
+                                            <i class="fa-solid fa-right-from-bracket group-hover:translate-x-1 transition"></i>
+                                            LOGOUT
+                                        </button>
+                                    </form>
                                 </div>
-                                <span class="text-xs font-bold mr-2">{{ auth()->user()->name }}</span>
                             </div>
                         @endguest
                     </div>
@@ -160,79 +184,42 @@
     </main>
 
     <footer class="bg-black py-12 border-t border-white/5 text-center">
-
         <div class="max-w-screen-xl mx-auto px-4">
-
             <div class="flex justify-center items-center gap-6 md:gap-10 mb-8">
-
                 <a href="https://instagram.com/WalkAtWallClouds.id" target="_blank" class="group flex flex-col items-center gap-2">
-
                     <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-900 group-hover:bg-gradient-to-tr group-hover:from-yellow-400 group-hover:via-red-500 group-hover:to-purple-600 transition-all duration-300">
-
                         <i class="fa-brands fa-instagram text-xl text-gray-400 group-hover:text-white"></i>
-
                     </div>
-
                     <span class="text-[10px] font-bold text-gray-500 group-hover:text-white uppercase tracking-tighter">Instagram</span>
-
                 </a>
-
-
 
                 <a href="https://youtube.com/@WalkAtWallClouds.id" target="_blank" class="group flex flex-col items-center gap-2">
-
                     <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-900 group-hover:bg-red-600 transition-all duration-300">
-
                         <i class="fa-brands fa-youtube text-xl text-gray-400 group-hover:text-white"></i>
-
                     </div>
-
                     <span class="text-[10px] font-bold text-gray-500 group-hover:text-white uppercase tracking-tighter">YouTube</span>
-
                 </a>
-
-
 
                 <a href="https://x.com/WalkAtWallClouds.id" target="_blank" class="group flex flex-col items-center gap-2">
-
                     <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-900 group-hover:bg-white transition-all duration-300">
-
                         <i class="fa-brands fa-x-twitter text-xl text-gray-400 group-hover:text-black"></i>
-
                     </div>
-
                     <span class="text-[10px] font-bold text-gray-500 group-hover:text-white uppercase tracking-tighter">Twitter</span>
-
                 </a>
-
-
 
                 <a href="https://facebook.com/WalkAtWallClouds.id" target="_blank" class="group flex flex-col items-center gap-2">
-
                     <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-900 group-hover:bg-blue-600 transition-all duration-300">
-
                         <i class="fa-brands fa-facebook text-xl text-gray-400 group-hover:text-white"></i>
-
                     </div>
-
                     <span class="text-[10px] font-bold text-gray-500 group-hover:text-white uppercase tracking-tighter">Facebook</span>
-
                 </a>
-
             </div>
 
-
-
             <div class="h-px w-20 bg-indigo-500 mx-auto mb-6"></div>
-
             <p class="text-gray-600 text-[10px] tracking-widest uppercase font-medium">
-
                 &copy; 2025 WalkAtWallClouds. All rights reserved.
-
             </p>
-
         </div>
-
     </footer>
     @stack('scripts')
 </body>

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
+
 use App\Http\Controllers\SearchLandingController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
@@ -16,9 +17,13 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketTypeController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\SocialAuthController;
 use App\Models\Artist;
+
+//  LIVE SEARCH DASHBOARD
+use App\Http\Controllers\Admin\SearchDashboardController;
+
+use App\Http\Middleware\AdminMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +44,6 @@ Route::get('/ticket/{ticketType}', [CheckoutController::class, 'show'])->name('p
 | Search Landing Page
 |--------------------------------------------------------------------------
 */
-
 Route::get('/search', [SearchLandingController::class, 'index']);
 
 /*
@@ -110,10 +114,11 @@ Route::middleware('guest')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    
-    // ===== CHECKOUT - Only for authenticated users =====
+
+    // ===== CHECKOUT =====
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-    Route::get('/order/{order}/confirmation', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
+    Route::get('/order/{order}/confirmation', [CheckoutController::class, 'confirmation'])
+        ->name('checkout.confirmation');
 });
 
 /*
@@ -122,32 +127,40 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
+
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin');
-    
+
+    //  LIVE SEARCH DASHBOARD (AJAX)
+    Route::get('/admin/search', [SearchDashboardController::class, 'index'])
+        ->name('admin.search');
+
     // ===== ARTIST CRUD =====
     Route::resource('artists', ArtistController::class);
-    
+
     // ===== EVENT CRUD =====
     Route::resource('events', EventController::class);
-    
+
     // ===== ORDER CRUD =====
     Route::resource('orders', OrderController::class);
-    
+
     // ===== ORDER ITEM CRUD =====
     Route::resource('order-items', OrderItemController::class);
-    
+
     // ===== PAYMENT CRUD =====
     Route::resource('payments', PaymentController::class);
-    
+
     // ===== TICKET CRUD =====
     Route::resource('tickets', TicketController::class);
-    
+
     // ===== TICKET TYPE CRUD =====
     Route::resource('ticket-types', TicketTypeController::class);
 });
 
-
-
+/*
+|--------------------------------------------------------------------------
+| Social Auth
+|--------------------------------------------------------------------------
+*/
 Route::get('/auth/google', [SocialAuthController::class, 'redirectGoogle']);
 Route::get('/auth/google/callback', [SocialAuthController::class, 'callbackGoogle']);
 
