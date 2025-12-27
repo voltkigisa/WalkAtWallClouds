@@ -17,7 +17,7 @@
         </div>
     @endif
     
-    <form action="{{ route('artists.store') }}" method="POST">
+    <form action="{{ route('artists.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         
         <table>
@@ -34,8 +34,25 @@
                 <td><input type="text" id="genre" name="genre" value="{{ old('genre') }}" required></td>
             </tr>
             <tr>
-                <td><label for="photo">Photo URL:</label></td>
-                <td><input type="text" id="photo" name="photo" value="{{ old('photo') }}" required></td>
+                <td><label for="events">Events:</label></td>
+                <td>
+                    <select id="events" name="events[]" multiple size="5" style="width: 100%;">
+                        @foreach($events as $event)
+                            <option value="{{ $event->id }}" {{ in_array($event->id, old('events', [])) ? 'selected' : '' }}>
+                                {{ $event->title }} - {{ $event->event_date }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <br><small>Tekan Ctrl (atau Cmd di Mac) untuk memilih lebih dari satu event</small>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="photo">Photo:</label></td>
+                <td>
+                    <input type="file" id="photo" name="photo" accept="image/*" required onchange="previewImage(event)">
+                    <br><small>Max 5MB, Format: JPG, PNG, JPEG</small>
+                    <br><img id="preview" src="" alt="Preview" style="max-width: 200px; margin-top: 10px; display: none;">
+                </td>
             </tr>
             <tr>
                 <td colspan="2">
@@ -45,5 +62,21 @@
             </tr>
         </table>
     </form>
+    
+    <script>
+        function previewImage(event) {
+            const preview = document.getElementById('preview');
+            const file = event.target.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
 </body>
 </html>

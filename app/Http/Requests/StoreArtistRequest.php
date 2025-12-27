@@ -11,7 +11,7 @@ class StoreArtistRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,27 @@ class StoreArtistRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'genre' => 'required|string|max:255',
+            'photo' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+            'events' => 'nullable|array',
+            'events.*' => 'exists:events,id',
+        ];
+    }
+    
+    /**
+     * Get custom error messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'photo.required' => 'Foto artist wajib diupload',
+            'photo.image' => 'File harus berupa gambar',
+            'photo.mimes' => 'Format foto harus: jpeg, jpg, atau png',
+            'photo.max' => 'Ukuran foto maksimal 2MB',
         ];
     }
 }
