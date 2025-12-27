@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
-
+use App\Http\Controllers\SearchLandingController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AdminController;
@@ -22,6 +22,14 @@ use App\Http\Middleware\AdminMiddleware;
 Route::get('/', function () {
     return view('home');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Search Landing Page
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/search', [SearchLandingController::class, 'index']);
 
 /*
 |--------------------------------------------------------------------------
