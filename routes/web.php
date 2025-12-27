@@ -13,6 +13,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\TicketTypeController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\SocialAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,3 +106,11 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::resource('order-items', OrderItemController::class);
     Route::resource('ticket-types', TicketTypeController::class);
 });
+
+
+
+Route::get('/auth/google', [SocialAuthController::class, 'redirectGoogle']);
+Route::get('/auth/google/callback', [SocialAuthController::class, 'callbackGoogle']);
+
+Route::get('/auth/github', [SocialAuthController::class, 'redirectGithub']);
+Route::get('/auth/github/callback', [SocialAuthController::class, 'callbackGithub']);
