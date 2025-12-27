@@ -28,8 +28,7 @@ class UpdateEventRequest extends FormRequest
             'event_date' => ['required', 'date'],
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
-            'poster' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
-            'status' => ['required', 'in:active,inactive,cancelled'],
+            'status' => ['required', 'in:draft,published,cancelled'],
         ];
     }
 }

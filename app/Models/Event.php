@@ -17,7 +17,6 @@ class Event extends Model
         'event_date',
         'start_time',
         'end_time',
-        'poster',
         'status',
     ];
 

@@ -30,7 +30,14 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
-        Event::create($request->validated());
+        $data = $request->validated();
+        
+        // If status is published, unpublish other events
+        if ($data['status'] === 'published') {
+            Event::where('status', 'published')->update(['status' => 'draft']);
+        }
+        
+        Event::create($data);
         return redirect()->route('events.index')->with('success', 'Event berhasil ditambahkan');
     }
 
@@ -55,7 +62,16 @@ class EventController extends Controller
      */
     public function update(UpdateEventRequest $request, Event $event)
     {
-        $event->update($request->validated());
+        $data = $request->validated();
+        
+        // If status is published, unpublish other events
+        if ($data['status'] === 'published') {
+            Event::where('status', 'published')
+                ->where('id', '!=', $event->id)
+                ->update(['status' => 'draft']);
+        }
+        
+        $event->update($data);
         return redirect()->route('events.show', $event)->with('success', 'Event berhasil diperbarui');
     }
 
