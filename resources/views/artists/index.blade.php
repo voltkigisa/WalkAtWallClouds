@@ -1,4 +1,4 @@
-<x-layout title="Manage Artists">
+<x-admin-layout title="Manage Artists">
     <div class="p-6">
         <div class="flex justify-between items-center mb-6">
             <div>
@@ -92,4 +92,4 @@
             </table>
         </div>
     </div>
-</x-layout>
+</x-admin-layout>
