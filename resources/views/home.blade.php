@@ -153,7 +153,7 @@
                             </div>
 
                             <div class="mt-8">
-                                <a href="/ticket" class="block w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-center font-black rounded-xl transition duration-300 shadow-lg shadow-indigo-500/20 uppercase tracking-widest">
+                                <a href="{{ route('tickets') }}" class="block w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-center font-black rounded-xl transition duration-300 shadow-lg shadow-indigo-500/20 uppercase tracking-widest">
                                     Beli Tiket Sekarang
                                 </a>
                                 <p class="text-center text-gray-500 text-[10px] mt-4 uppercase">Harga belum termasuk pajak & biaya layanan</p>
