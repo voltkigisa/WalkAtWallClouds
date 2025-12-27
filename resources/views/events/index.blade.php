@@ -1,4 +1,4 @@
-<x-layout title="Daftar Event - WalkAtWallClouds">
+<x-admin-layout title="Daftar Event - WalkAtWallClouds">
     <main class="bg-gray-900 min-h-screen text-white py-12">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="flex justify-between items-center mb-10">
@@ -67,4 +67,4 @@
             </div>
         </div>
     </main>
-</x-layout>
+</x-admin-layout>
