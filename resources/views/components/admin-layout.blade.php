@@ -2,12 +2,177 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>{{ $title ?? 'Admin' }}</title>
-    @vite('resources/css/app.css')
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $title ?? 'Admin' }} | WalkAtWallClouds</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/navbar.js'])
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-gray-900 text-white">
 
-    {{ $slot }}
+<body class="bg-gray-900 text-white font-sans" 
+      x-data="searchHandler()" 
+      @keydown.escape.window="showSearch = false"
+      @keydown.window.ctrl.k.prevent="showSearch = true">
 
+    <div x-show="showSearch" 
+         x-trap.noscroll="showSearch"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 backdrop-blur-0"
+         x-transition:enter-end="opacity-100 backdrop-blur-sm"
+         x-transition:leave="transition ease-in duration-200"
+         class="fixed inset-0 z-[100] bg-black/80 flex justify-center pt-20 px-4"
+         style="display: none;">
+        
+        <div @click.away="showSearch = false" 
+             class="w-full max-w-2xl bg-gray-900 rounded-3xl border border-white/10 shadow-[0_0_50px_-12px_rgba(79,70,229,0.5)] overflow-hidden h-fit">
+            
+            <div class="p-6 border-b border-white/5 flex items-center gap-4 bg-black/20">
+                <template x-if="!isLoading">
+                    <i class="fa-solid fa-magnifying-glass text-indigo-500 text-xl"></i>
+                </template>
+                <template x-if="isLoading">
+                    <i class="fa-solid fa-circle-notch fa-spin text-indigo-500 text-xl"></i>
+                </template>
+
+                <input type="text" 
+                       x-model.debounce.500ms="search"
+                       @input="fetchResults"
+                       placeholder="Cari Data Admin (User, Event, Tiket)..." 
+                       class="bg-transparent w-full border-none focus:ring-0 text-lg text-white placeholder-gray-600 outline-none"
+                       autofocus>
+                
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] text-gray-600 font-bold border border-white/10 px-2 py-1 rounded-md uppercase">Ctrl + K</span>
+                    <button @click="showSearch = false" class="text-gray-500 hover:text-white transition">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="max-h-[400px] overflow-y-auto p-4 bg-gray-900/50">
+                <div x-show="search.length === 0" class="text-center py-12">
+                    <div class="w-16 h-16 bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/5">
+                        <i class="fa-solid fa-keyboard text-gray-600 text-2xl"></i>
+                    </div>
+                    <p class="text-gray-400 font-bold uppercase tracking-widest text-xs">Mulai mengetik untuk mencari data...</p>
+                </div>
+
+                <div x-show="isLoading" class="space-y-3 p-2">
+                    <div class="h-16 bg-white/5 animate-pulse rounded-2xl w-full"></div>
+                    <div class="h-16 bg-white/5 animate-pulse rounded-2xl w-full"></div>
+                </div>
+
+                <div x-show="!isLoading && results.length > 0">
+                    <p class="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em] mb-4 px-2">
+                        Admin Data Results (<span x-text="results.length"></span>)
+                    </p>
+                    <div class="space-y-2">
+                        <template x-for="item in results" :key="item.id">
+                            <a :href="item.url" class="flex items-center gap-4 p-3 rounded-2xl hover:bg-indigo-600/10 border border-transparent hover:border-indigo-500/30 transition group">
+                                <div class="w-12 h-12 bg-gray-800 rounded-xl flex-shrink-0 flex items-center justify-center border border-white/5 overflow-hidden">
+                                    <template x-if="item.image">
+                                        <img :src="item.image" class="w-full h-full object-cover">
+                                    </template>
+                                    <template x-if="!item.image">
+                                        <i class="fa-solid fa-database text-indigo-500"></i>
+                                    </template>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-black text-white group-hover:text-indigo-400 transition italic uppercase" x-text="item.title"></h4>
+                                    <p class="text-[10px] text-gray-500 font-bold uppercase tracking-tight" x-text="item.category"></p>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-gray-700 group-hover:text-indigo-500 pr-2 transition"></i>
+                            </a>
+                        </template>
+                    </div>
+                </div>
+
+                <div x-show="!isLoading && search.length > 0 && results.length === 0" class="text-center py-12">
+                    <div class="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-500/20">
+                        <i class="fa-solid fa-face-frown text-red-500 text-2xl"></i>
+                    </div>
+                    <p class="text-gray-400 font-bold text-xs">Data tidak ditemukan</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex min-h-screen">
+        <aside class="w-64 bg-black border-r border-gray-800 hidden md:block fixed h-full z-50">
+            <div class="p-6">
+                <h1 class="text-xl font-black text-indigo-500 tracking-tighter uppercase italic">
+                    WalkAtWall <span class="text-white">Clouds</span>
+                </h1>
+            </div>
+            <nav class="mt-4 px-4 space-y-1">
+               <p class="text-[10px] font-bold text-gray-500 uppercase px-4 mb-2 tracking-widest">Main Menu</p>
+                <a href="{{ route('admin') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('admin') ? 'bg-indigo-600 shadow-indigo-500/20' : 'text-gray-400 hover:bg-gray-800' }} rounded-xl text-sm font-bold transition shadow-lg">
+                    <i class="fa-solid fa-gauge w-5"></i> Dashboard
+                </a>
+                <a href="{{ route('events.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-800 hover:text-white rounded-xl text-sm font-semibold transition">
+                    <i class="fa-solid fa-calendar w-5"></i> Manage Events
+                </a>
+                <a href="{{ route('artists.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-800 hover:text-white rounded-xl text-sm font-semibold transition">
+                    <i class="fa-solid fa-microphone w-5"></i> Manage Artists
+                </a>
+                <a href="{{ route('ticket-types.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-800 hover:text-white rounded-xl text-sm font-semibold transition">
+                    <i class="fa-solid fa-ticket w-5"></i> Ticket Types
+                </a>
+                <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-800 hover:text-white rounded-xl text-sm font-semibold transition">
+                    <i class="fa-solid fa-users w-5"></i> Manage Users
+                </a>
+                <a href="{{ route('order-items.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-800 hover:text-white rounded-xl text-sm font-semibold transition">
+                    <i class="fa-solid fa-file-invoice w-5"></i> Order Items
+                </a>
+                
+                <div class="pt-6 mt-6 border-t border-gray-800">
+                    <a href="{{ url('/') }}" class="flex items-center gap-3 px-4 py-3 text-indigo-400 hover:bg-indigo-500/10 rounded-xl text-sm font-bold transition border border-indigo-500/20">
+                        <i class="fa-solid fa-house w-5"></i> Landing Page
+                    </a>
+                </div>
+
+                <div class="pt-4">
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-500/10 rounded-xl text-sm font-bold transition">
+                            <i class="fa-solid fa-right-from-bracket w-5"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            </nav>
+        </aside>
+
+        <div class="flex-1 md:ml-64 flex flex-col min-h-screen">
+            <header class="h-20 bg-gray-900/50 backdrop-blur-md border-b border-white/5 px-8 flex items-center justify-between sticky top-0 z-40">
+                
+                <button @click="showSearch = true" class="group flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-2 rounded-xl hover:bg-white/10 transition w-full max-w-md">
+                    <i class="fa-solid fa-magnifying-glass text-gray-500 group-hover:text-indigo-500 transition"></i>
+                    <span class="text-xs font-bold text-gray-500">Live Search data admin...</span>
+                    <span class="ml-auto bg-gray-800 px-1.5 py-0.5 rounded text-[10px] text-gray-400 border border-white/5">Ctrl K</span>
+                </button>
+
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-bold text-white uppercase">{{ Auth::user()->name }}</p>
+                        <p class="text-[10px] text-indigo-400 font-bold uppercase tracking-widest">Administrator</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-bold shadow-lg shadow-indigo-500/30">
+                        {{ substr(Auth::user()->name, 0, 1) }}
+                    </div>
+                </div>
+            </header>
+
+            <main class="p-8">
+                {{ $slot }}
+            </main>
+        </div>
+    </div>
+
+    @stack('scripts')
 </body>
 </html>

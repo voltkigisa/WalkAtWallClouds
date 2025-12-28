@@ -14,6 +14,7 @@ class OrderItemController extends Controller
     public function index()
     {
         $orderItems = OrderItem::all();
+        $orderItems = OrderItem::with(['order.user', 'ticketType'])->get();
         return view('order-items.index', compact('orderItems'));
     }
 

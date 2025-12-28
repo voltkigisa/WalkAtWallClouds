@@ -8,7 +8,7 @@
                 
                 <div class="w-full lg:w-1/3 text-center lg:text-left z-10">
                     <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-indigo-400 uppercase bg-indigo-400/10 rounded-full mb-4">
-                        Music Festival 2025
+                        Music Festival
                     </span>
                     <div id="text-carousel-info">
                         <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight uppercase tracking-tighter" id="slide-title">
@@ -19,14 +19,20 @@
                         </p>
                     </div>
                     
+                    <div class="mb-8">
+                        <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">
+                            {{ $event ? $event->title : 'WalkAtWallClouds Festival' }}
+                        </h2>
+                    </div>
+                    
                      <div class="flex flex-wrap justify-center md:justify-start gap-4">
                             <div class="bg-black/50 border border-white/10 p-4 rounded-xl min-w-[140px]">
                                 <p class="text-indigo-400 font-bold">DATE</p>
-                                <p class="text-white">20 Feb 2025</p>
+                                <p class="text-white">{{ $event ? \Carbon\Carbon::parse($event->event_date)->format('d M Y') : 'TBA' }}</p>
                             </div>
                             <div class="bg-black/50 border border-white/10 p-4 rounded-xl min-w-[140px]">
                                 <p class="text-indigo-400 font-bold">LOCATION</p>
-                                <p class="text-white">Senayan, Jakarta</p>
+                                <p class="text-white">{{ $event ? $event->location : 'TBA' }}</p>
                             </div>
                         </div>
 
@@ -38,27 +44,13 @@
                 <div class="w-full lg:w-2/3 relative">
                     <div class="relative overflow-hidden rounded-3xl aspect-[16/9] shadow-2xl border border-white/10">
                         <div id="carousel" class="flex transition-transform duration-700 ease-in-out h-full">
+                            @foreach($artists as $artist)
                             <div class="min-w-full h-full relative">
-                                <img src="{{ asset('images/dewa-19.jpeg') }}" class="w-full h-full object-cover" alt="dewa-19">
+                                <img src="{{ asset('storage/'.$artist->photo) }}" class="w-full h-full object-cover" alt="{{ $artist->name }}">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                                 
                             </div>
-                            <div class="min-w-full h-full relative">
-                                <img src="{{ asset('images/panturas.jpeg') }}" class="w-full h-full object-cover" alt="The Panturas">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                                
-                            </div>
-                            <div class="min-w-full h-full relative">
-                                <img src="{{ asset('images/perunggu.jpeg') }}" class="w-full h-full object-cover" alt="Perunggu">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                                
-                            </div>
-
-                            <div class="min-w-full h-full relative">
-                                <img src="{{ asset('images/juicy.jpg') }}" class="w-full h-full object-cover" alt="juicy luicy">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                                
-                            </div>
+                            @endforeach
                         </div>
 
                         <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition">
@@ -83,24 +75,15 @@
                 </section>
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                    @php
-                        $stars = [
-                            ['name' => 'DEWA 19', 'img' => 'dewa-19.jpeg', 'tag' => 'Main Headliner'],
-                            ['name' => 'THE PANTURAS', 'img' => 'panturas.jpeg', 'tag' => 'Special Performance'],
-                            ['name' => 'PERUNGGU', 'img' => 'perunggu.jpeg', 'tag' => 'Indie Rock'],
-                            ['name' => 'JUICY LUICY', 'img' => 'juicy.jpg', 'tag' => 'Pop Jazz'],
-                        ];
-                    @endphp
-
-                    @foreach($stars as $star)
+                    @foreach($artists as $artist)
                     <div class="group cursor-pointer">
                         <div class="relative overflow-hidden rounded-2xl bg-gray-800 aspect-[3/4] mb-4">
-                            <img src="{{ asset('images/'.$star['img']) }}" alt="{{ $star['name'] }}" class="h-full w-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-500">
+                            <img src="{{ asset('storage/'.$artist->photo) }}" alt="{{ $artist->name }}" class="h-full w-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-500">
                             <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded text-[10px] font-bold">
-                                {{ $star['tag'] }}
+                                {{ $artist->genre }}
                             </div>
                         </div>
-                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">{{ $star['name'] }}</h3>
+                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">{{ $artist->name }}</h3>
                     </div>
                     @endforeach
                 </div>
@@ -110,8 +93,20 @@
         <section id="ticket" class="py-20 bg-gray-900 scroll-mt-24">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="mb-12">
-                    <h2 class="text-3xl font-bold text-white mb-2 tracking-tight uppercase">Get Your Tickets</h2>
+                    <h2 class="text-3xl font-bold text-white mb-2 tracking-tight uppercase">{{ $event ? $event->title : 'Get Your Tickets' }}</h2>
                     <div class="h-1 w-20 bg-indigo-500"></div>
+                    @if($event)
+                        <div class="mt-4 flex gap-6 text-sm">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-calendar text-indigo-400"></i>
+                                <span class="text-gray-400">{{ \Carbon\Carbon::parse($event->event_date)->format('d M Y') }}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-location-dot text-indigo-400"></i>
+                                <span class="text-gray-400">{{ $event->location }}</span>
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="flex flex-col lg:flex-row gap-12 items-start">
@@ -130,30 +125,25 @@
                             <h3 class="text-xl font-bold text-white mb-6 uppercase">Ticket Categories</h3>
                             
                             <div class="space-y-4">
-                                <div class="flex items-center justify-between p-4 bg-gray-800/50 rounded-xl border border-indigo-500/30">
+                                @forelse($ticketTypes as $index => $ticketType)
+                                <div class="flex items-center justify-between p-4 rounded-xl border {{ $index === 0 ? 'bg-gray-800/50 border-indigo-500/30' : 'bg-gray-800/30 border-white/5' }}">
                                     <div>
-                                        <h4 class="text-lg font-bold text-white">CAT 1 (Standing)</h4>
+                                        <h4 class="font-black text-white uppercase text-sm">{{ $ticketType->name }}</h4>
+                                        <p class="text-[10px] text-gray-500 font-bold uppercase">{{ $ticketType->quota - $ticketType->sold }} / {{ $ticketType->quota }} Available</p>
                                     </div>
-                                    <p class="text-white font-black text-lg">Rp 1.000.000</p>
-                                </div>
-
-                                <div class="flex items-center justify-between p-4 bg-gray-800/30 rounded-xl border border-white/5">
-                                    <div>
-                                        <h4 class="text-lg font-bold text-white">CAT 2 (Standing)</h4>
+                                    <div class="text-right">
+                                        <p class="text-indigo-400 font-black text-lg">Rp {{ number_format($ticketType->price, 0, ',', '.') }}</p>
                                     </div>
-                                    <p class="text-white font-black text-lg">Rp 700.000</p>
                                 </div>
-
-                                <div class="flex items-center justify-between p-4 bg-gray-800/30 rounded-xl border border-white/5">
-                                    <div>
-                                        <h4 class="text-lg font-bold text-white">CAT 3 (Standing)</h4>
-                                    </div>
-                                    <p class="text-white font-black text-lg">Rp 500.000</p>
+                                @empty
+                                <div class="p-4 bg-gray-800/30 rounded-xl border border-white/5 text-center">
+                                    <p class="text-gray-500 text-sm uppercase font-bold">No tickets available yet</p>
                                 </div>
+                                @endforelse
                             </div>
 
                             <div class="mt-8">
-                                <a href="/ticket" class="block w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-center font-black rounded-xl transition duration-300 shadow-lg shadow-indigo-500/20 uppercase tracking-widest">
+                                <a href="#" class="block w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-center font-black rounded-xl transition duration-300 shadow-lg shadow-indigo-500/20 uppercase tracking-widest">
                                     Beli Tiket Sekarang
                                 </a>
                                 <p class="text-center text-gray-500 text-[10px] mt-4 uppercase">Harga belum termasuk pajak & biaya layanan</p>
@@ -177,23 +167,22 @@
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    @if (session('success'))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            
-            @if (session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: '{{ session('success') }}',
-                    background: '#111827', 
-                    color: '#ffffff',
-                    showConfirmButton: false,
-                    timer: 2500, 
-                    timerProgressBar: true,
-                });
-            @endif
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session("success") }}',
+                background: '#111827', 
+                color: '#ffffff',
+                showConfirmButton: false,
+                timer: 2500, 
+                timerProgressBar: true,
+            });
         });
     </script>
+    @endif
 </body>
     </main>
     @push('scripts')

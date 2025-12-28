@@ -17,6 +17,8 @@ class User extends Authenticatable
         'password',
         'role',
         'phone',
+        'provider',
+        'provider_id',
     ];
 
     protected $hidden = [
@@ -24,11 +26,16 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function orders()
+    protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

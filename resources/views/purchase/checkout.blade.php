@@ -106,7 +106,7 @@
         const quantityInput = document.querySelector('input[name="quantity"]');
         const quantityDisplay = document.getElementById('quantity-display');
         const totalPrice = document.getElementById('total-price');
-        const pricePerTicket = {{ $ticketType->price }};
+        const pricePerTicket = parseInt('{{ $ticketType->price }}');
 
         function updateTotal() {
             const quantity = parseInt(quantityInput.value) || 1;

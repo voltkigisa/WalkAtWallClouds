@@ -75,7 +75,7 @@ class CheckoutController extends Controller
             Ticket::create([
                 'order_item_id' => $orderItem->id,
                 'ticket_code' => $ticketCode,
-                'qr_code' => null, // Can be generated later
+                'qr_code' => null,
                 'status' => 'issued',
                 'used_at' => null,
             ]);
