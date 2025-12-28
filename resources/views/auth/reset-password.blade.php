@@ -66,28 +66,47 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-@if ($errors->any())
+@php
+    $resetErrorMsg = $errors->any() ? $errors->first() : null;
+    $resetStatusMsg = session('status');
+@endphp
+
+@if ($resetErrorMsg)
+<div id="reset-error-data" data-error="{!! addslashes($resetErrorMsg) !!}" style="display:none;"></div>
 <script>
-    Swal.fire({
-        icon: 'error',
-        title: 'Reset Password Gagal',
-        text: '{{ $errors->first() }}',
-        background: '#111827',
-        color: '#ffffff',
-        confirmButtonColor: '#2563eb'
+    document.addEventListener('DOMContentLoaded', function() {
+        const errorEl = document.getElementById('reset-error-data');
+        const errorMsg = errorEl ? errorEl.getAttribute('data-error') : null;
+        if (errorMsg) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Reset Password Gagal',
+                text: errorMsg,
+                background: '#111827',
+                color: '#ffffff',
+                confirmButtonColor: '#2563eb'
+            });
+        }
     });
 </script>
 @endif
 
-@if (session('status'))
+@if ($resetStatusMsg)
+<div id="reset-status-data" data-status="{!! addslashes($resetStatusMsg) !!}" style="display:none;"></div>
 <script>
-    Swal.fire({
-        icon: 'success',
-        title: 'Berhasil',
-        text: '{{ session('status') }}',
-        background: '#111827',
-        color: '#ffffff',
-        confirmButtonColor: '#2563eb'
+    document.addEventListener('DOMContentLoaded', function() {
+        const statusEl = document.getElementById('reset-status-data');
+        const statusMsg = statusEl ? statusEl.getAttribute('data-status') : null;
+        if (statusMsg) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: statusMsg,
+                background: '#111827',
+                color: '#ffffff',
+                confirmButtonColor: '#2563eb'
+            });
+        }
     });
 </script>
 @endif

@@ -79,24 +79,38 @@
                 </p>
             </form>
         </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    @php
+        $regSuccess = session('success');
+    @endphp
+    
+    @if ($regSuccess)
+    <div id="register-success-data" data-success="{!! addslashes($regSuccess) !!}" style="display:none;"></div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            
-            @if (session('success'))
+            const successEl = document.getElementById('register-success-data');
+            const successMsg = successEl ? successEl.getAttribute('data-success') : null;
+            if (successMsg) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil!',
-                    text: '{{ session('success') }}',
+                    text: successMsg,
                     background: '#111827', 
                     color: '#ffffff',
                     showConfirmButton: false,
                     timer: 2500, 
                     timerProgressBar: true,
                 });
-            @endif
+            }
         });
     </script>
-    </main>
+    @else
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @endif
         
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
 </div>

@@ -64,20 +64,27 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    @php
+        $loginErrorMsg = $errors->any() ? $errors->first() : null;
+    @endphp
+    
+    @if ($loginErrorMsg)
+    <div id="login-error-data" data-error="{!! addslashes($loginErrorMsg) !!}" style="display:none;"></div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. Pop-up Gagal (Email/Password Salah)
-            // Dipicu jika Controller mengirim redirect()->back()->withErrors(...)
-            @if ($errors->any())
+            const errorEl = document.getElementById('login-error-data');
+            const errorMsg = errorEl ? errorEl.getAttribute('data-error') : null;
+            if (errorMsg) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Login Gagal',
-                    text: '{{ $errors->first() }}',
-                    background: '#111827', // Gray-900
+                    text: errorMsg,
+                    background: '#111827',
                     color: '#ffffff',
-                    confirmButtonColor: '#2563eb' // Blue-600
+                    confirmButtonColor: '#2563eb'
                 });
-            @endif
+            }
         });
     </script>
+    @endif
 </div>
