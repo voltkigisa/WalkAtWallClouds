@@ -178,3 +178,11 @@ Route::get('/auth/google/callback', [SocialAuthController::class, 'callbackGoogl
 
 Route::get('/auth/github', [SocialAuthController::class, 'redirectGithub']);
 Route::get('/auth/github/callback', [SocialAuthController::class, 'callbackGithub']);
+
+// Route untuk Admin (Dashboard)
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/api/admin/search', [SearchDashboardController::class, 'index'])->name('admin.search.api');
+});
+
+// Route untuk Publik (Landing Page)
+Route::get('/api/search', [SearchLandingController::class, 'index'])->name('landing.search.api');
