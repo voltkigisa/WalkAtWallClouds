@@ -23,7 +23,6 @@
       @keydown.window.ctrl.k.prevent="showSearch = true"
       class="bg-gray-900 min-h-screen text-gray-100 flex flex-col">
 
-    {{-- MODAL SEARCH --}}
     <div x-show="showSearch" 
          x-trap.noscroll="showSearch"
          x-transition:enter="transition ease-out duration-300"
@@ -107,14 +106,23 @@
         </div>
     </div>
 
-    {{-- NAVBAR --}}
     <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/5">
         <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="relative flex h-20 items-center justify-between">
+                
                 <div class="flex items-center">
+                    <div class="flex items-center md:hidden mr-4">
+                        <button id="menu-btn" type="button" class="text-gray-400 hover:text-white focus:outline-none transition">
+                            <svg id="menu-icon" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            </svg>
+                        </button>
+                    </div>
+
                     <a href="/" class="text-xl font-black tracking-tighter uppercase italic text-indigo-500">
                         WalkAtWall <span class="text-white">Clouds</span>
                     </a>
+                    
                     <div class="hidden md:ml-12 md:block">
                         <div class="flex space-x-8">
                             <a href="#home" class="text-sm font-bold text-gray-400 hover:text-indigo-400 transition uppercase tracking-widest">Home</a>
@@ -132,6 +140,13 @@
                     </button>
 
                     <div class="flex items-center gap-4">
+                        <a href="#" class="relative group p-2.5 bg-white/5 border border-white/10 rounded-xl hover:bg-indigo-600/20 hover:border-indigo-500/50 transition">
+                            <i class="fa-solid fa-cart-shopping text-gray-400 group-hover:text-indigo-400 transition text-sm"></i>
+                            <span class="absolute -top-1.5 -right-1.5 bg-indigo-600 text-[9px] font-black w-4.5 h-4.5 flex items-center justify-center rounded-full border border-gray-900 shadow-lg group-hover:scale-110 transition">
+                                0
+                            </span>
+                        </a>
+
                         @guest
                             <a href="{{ route('login') }}" class="text-sm font-black uppercase tracking-widest hover:text-indigo-500 transition">Login</a>
                         @else
@@ -144,7 +159,7 @@
                             
                             <div x-data="{ open: false }" class="relative">
                                 <button @click="open = !open" class="flex items-center gap-3 bg-white/5 border border-white/10 p-1.5 rounded-2xl hover:bg-white/10 transition outline-none">
-                                    <div class="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-xs">
+                                    <div class="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-xs text-white">
                                         {{ substr(auth()->user()->name, 0, 1) }}
                                     </div>
                                     <span class="text-xs font-bold mr-1 hidden sm:inline">{{ auth()->user()->name }}</span>
@@ -180,6 +195,12 @@
                     </div>
                 </div> 
             </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-black/95 border-t border-white/5 px-4 py-6 space-y-4 shadow-2xl">
+            <a href="#home" class="block text-sm font-bold text-gray-400 hover:text-indigo-400 uppercase tracking-widest transition">Home</a>
+            <a href="#guest-star" class="block text-sm font-bold text-gray-400 hover:text-indigo-400 uppercase tracking-widest transition">Guest Star</a>
+            <a href="#ticket" class="block text-sm font-bold text-gray-400 hover:text-indigo-400 uppercase tracking-widest transition">Ticket</a>
         </div>
     </nav>
 
@@ -225,6 +246,7 @@
             </p>
         </div>
     </footer>
+
     @stack('scripts')
 </body>
 </html>
