@@ -8,20 +8,26 @@ use App\Models\Artist;
 use App\Models\Order;
 use App\Models\Ticket;
 use App\Models\TicketType;
+use App\Models\User;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        $events = Event::withCount('artists')->get();
-        $artists = Artist::withCount('events')->get();
-        $ticketTypes = TicketType::with('event')->get();
+        // Limit 5 for dashboard preview
+        $events = Event::withCount('artists')->limit(5)->get();
+        $artists = Artist::withCount('events')->limit(5)->get();
+        $ticketTypes = TicketType::with('event')->limit(5)->get();
+        $users = User::withCount(['orders'])->limit(5)->get();
+        
+        // Total counts
         $totalEvents = Event::count();
         $totalArtists = Artist::count();
         $totalOrders = Order::count();
         $totalTickets = Ticket::count();
         $totalTicketTypes = TicketType::count();
+        $totalUsers = User::count();
         
-        return view('admin', compact('events', 'artists', 'ticketTypes', 'totalEvents', 'totalArtists', 'totalOrders', 'totalTickets', 'totalTicketTypes'));
+        return view('admin', compact('events', 'artists', 'ticketTypes', 'users', 'totalEvents', 'totalArtists', 'totalOrders', 'totalTickets', 'totalTicketTypes', 'totalUsers'));
     }
 }

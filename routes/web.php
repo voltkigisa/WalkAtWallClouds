@@ -17,6 +17,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketTypeController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\SocialAuthController;
 use App\Models\Artist;
@@ -157,6 +158,14 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
     // ===== TICKET TYPE CRUD =====
     Route::resource('ticket-types', TicketTypeController::class);
+
+    // ===== USER MANAGEMENT (Admin only) =====
+    Route::resource('users', UserController::class)->except(['edit', 'update', 'show']);
+});
+
+// User Profile - accessible by authenticated users
+Route::middleware(['auth'])->group(function () {
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
 });
 
 /*
