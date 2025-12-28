@@ -41,7 +41,7 @@
                                 </td>
                                 <td class="p-5">
                                     <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase border 
-                                        {{ $event->status == 'active' ? 'bg-green-500/10 border-green-500 text-green-500' : 'bg-gray-500/10 border-gray-500 text-gray-400' }}">
+                                        {{ $event->status == 'published' ? 'bg-green-500/10 border-green-500 text-green-500' : ($event->status == 'cancelled' ? 'bg-red-500/10 border-red-500 text-red-500' : 'bg-gray-500/10 border-gray-500 text-gray-400') }}">
                                         {{ $event->status }}
                                     </span>
                                 </td>

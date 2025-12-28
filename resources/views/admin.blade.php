@@ -21,6 +21,19 @@
         </div>
     </div>
 
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-10">
+        <div class="bg-gradient-to-br from-indigo-600/20 to-purple-600/20 p-6 rounded-3xl border border-indigo-500/30 shadow-xl relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-indigo-500/20 rounded-full group-hover:scale-150 transition duration-500"></div>
+            <p class="text-indigo-300 text-[10px] font-black uppercase tracking-widest mb-1">Ticket Types</p>
+            <h3 class="text-3xl font-black italic text-white">{{ $totalTicketTypes ?? 0 }}</h3>
+        </div>
+        <div class="bg-gradient-to-br from-green-600/20 to-emerald-600/20 p-6 rounded-3xl border border-green-500/30 shadow-xl relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-green-500/20 rounded-full group-hover:scale-150 transition duration-500"></div>
+            <p class="text-green-300 text-[10px] font-black uppercase tracking-widest mb-1">Available Tickets</p>
+            <h3 class="text-3xl font-black italic text-white">{{ $ticketTypes->sum(fn($t) => $t->quota - $t->sold) ?? 0 }}</h3>
+        </div>
+    </div>
+
     <div class="bg-black rounded-3xl border border-gray-800 shadow-2xl overflow-hidden">
         <div class="p-6 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
@@ -157,6 +170,80 @@
                         <td colspan="4" class="p-8 text-center text-gray-500">
                             <i class="fa-solid fa-inbox text-4xl mb-3 opacity-20"></i>
                             <p class="text-xs font-bold uppercase">Belum ada artist</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="bg-black rounded-3xl border border-gray-800 shadow-2xl overflow-hidden mt-10">
+        <div class="p-6 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <h3 class="text-lg font-black uppercase italic tracking-tighter text-indigo-400">Manage Ticket Types</h3>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Update or add new ticket categories</p>
+            </div>
+            <a href="{{ route('ticket-types.create') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition shadow-lg shadow-indigo-600/20">
+                + Add Ticket Type
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-900/50 text-[10px] text-gray-500 font-black uppercase tracking-widest">
+                        <th class="p-5">Ticket Details</th>
+                        <th class="p-5 text-center">Event</th>
+                        <th class="p-5 text-center">Price</th>
+                        <th class="p-5 text-center">Quota</th>
+                        <th class="p-5 text-center">Sold</th>
+                        <th class="p-5 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm">
+                    @forelse($ticketTypes as $ticketType)
+                    <tr class="border-t border-gray-800 hover:bg-indigo-500/5 transition duration-300">
+                        <td class="p-5">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-gray-800 flex-shrink-0 flex items-center justify-center">
+                                    <i class="fa-solid fa-ticket text-indigo-400"></i>
+                                </div>
+                                <div>
+                                    <p class="font-black text-white uppercase italic">{{ $ticketType->name }}</p>
+                                    <p class="text-[10px] text-gray-500 font-bold uppercase">{{ $ticketType->quota - $ticketType->sold }} Available</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-5 text-center text-xs">{{ $ticketType->event->title ?? '-' }}</td>
+                        <td class="p-5 text-center text-xs font-bold text-indigo-300">Rp {{ number_format($ticketType->price, 0, ',', '.') }}</td>
+                        <td class="p-5 text-center text-xs font-mono">{{ $ticketType->quota }}</td>
+                        <td class="p-5 text-center">
+                            <span class="px-3 py-1 bg-red-500/10 text-red-400 text-[9px] font-black rounded-full border border-red-500/20 uppercase tracking-widest">{{ $ticketType->sold }} Sold</span>
+                        </td>
+                        <td class="p-5">
+                            <div class="flex justify-end gap-2">
+                                <a href="{{ route('ticket-types.show', $ticketType->id) }}" class="p-2 text-gray-400 hover:bg-gray-400/10 rounded-lg transition border border-gray-400/20">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                                <a href="{{ route('ticket-types.edit', $ticketType->id) }}" class="p-2 text-blue-400 hover:bg-blue-400/10 rounded-lg transition border border-blue-400/20">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                <form action="{{ route('ticket-types.destroy', $ticketType->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus ticket type ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition border border-red-500/20">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr class="border-t border-gray-800">
+                        <td colspan="6" class="p-8 text-center text-gray-500">
+                            <i class="fa-solid fa-inbox text-4xl mb-3 opacity-20"></i>
+                            <p class="text-xs font-bold uppercase">Belum ada ticket type</p>
                         </td>
                     </tr>
                     @endforelse
