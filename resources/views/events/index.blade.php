@@ -1,4 +1,4 @@
-<x-admin-layout title="Daftar Event - WalkAtWallClouds">
+<x-layout title="Daftar Event - WalkAtWallClouds">
     <main class="bg-gray-900 min-h-screen text-white py-12">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="flex justify-between items-center mb-10">
@@ -41,7 +41,7 @@
                                 </td>
                                 <td class="p-5">
                                     <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase border 
-                                        {{ $event->status == 'published' ? 'bg-green-500/10 border-green-500 text-green-500' : ($event->status == 'cancelled' ? 'bg-red-500/10 border-red-500 text-red-500' : 'bg-gray-500/10 border-gray-500 text-gray-400') }}">
+                                        {{ $event->status == 'active' ? 'bg-green-500/10 border-green-500 text-green-500' : 'bg-gray-500/10 border-gray-500 text-gray-400' }}">
                                         {{ $event->status }}
                                     </span>
                                 </td>
@@ -67,4 +67,4 @@
             </div>
         </div>
     </main>
-</x-admin-layout>
+</x-layout>

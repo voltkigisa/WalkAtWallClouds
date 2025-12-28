@@ -10,41 +10,45 @@ class SearchLandingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = $request->query('q');
+        $q = trim($request->query('q', ''));
+        $location = trim($request->query('location', ''));
+        $date = trim($request->query('date', ''));
+        $type = trim($request->query('type', ''));
 
-        if (!$query) {
-            return response()->json([]);
+        if ($q === '') {
+            return response()->json([
+                'events' => [],
+                'artists' => [],
+                'tickets' => []
+            ]);
         }
 
-        $results = collect();
+        // Events filter
+        $eventsQuery = Event::select('id', 'title', 'event_date', 'location')
+            ->when($q, fn($qbuilder) => $qbuilder->where('title', 'like', "%{$q}%"))
+            ->when($location, fn($qbuilder) => $qbuilder->where('location', 'like', "%{$location}%"))
+            ->when($date, fn($qbuilder) => $qbuilder->whereDate('event_date', $date))
+            ->orderBy('event_date', 'desc')
+            ->limit(5);
 
-        // Cari Event Aktif
-        $events = Event::where('title', 'like', "%{$query}%")
-            ->where('status', 'active') // Asumsi ada kolom status
-            ->limit(4)->get()->map(function($event) {
-                return [
-                    'id' => 'landing-ev-' . $event->id,
-                    'title' => $event->title,
-                    'category' => 'Upcoming Event',
-                    'url' => url('/events/' . $event->slug), // Route detail event publik
-                    'image' => asset('storage/' . $event->image)
-                ];
-            });
+        // Artists filter
+        $artistsQuery = Artist::select('id', 'name', 'genre')
+            ->when($q, function ($qbuilder) use ($q) {
+                $qbuilder->where(function ($qq) use ($q) {
+                    $qq->where('name', 'like', "%{$q}%")
+                       ->orWhere('genre', 'like', "%{$q}%");
+                });
+            })
+            ->orderBy('name')
+            ->limit(5);
 
-        // Cari Artist / Guest Star
-        $artists = Artist::where('name', 'like', "%{$query}%")
-            ->limit(4)->get()->map(function($artist) {
-                return [
-                    'id' => 'landing-art-' . $artist->id,
-                    'title' => $artist->name,
-                    'category' => 'Guest Star',
-                    'url' => url('/artists/' . $artist->slug),
-                    'image' => asset('storage/' . $artist->photo)
-                ];
-            });
+        // Type gating (if provided)
+        $events = ($type && $type !== 'events') ? collect() : $eventsQuery->get();
+        $artists = ($type && $type !== 'artists') ? collect() : $artistsQuery->get();
 
-        $final = $results->concat($events)->concat($artists);
-
-        return response()->json($final);
+        return response()->json([
+            'events' => $events,
+            'artists' => $artists,
+        ]);
     }
 }

@@ -10,9 +10,6 @@ class Ticket extends Model
     /** @use HasFactory<\Database\Factories\TicketFactory> */
     use HasFactory;
 
-    // Disable timestamps karena migration tidak punya created_at/updated_at
-    public $timestamps = false;
-
     protected $fillable = [
         'order_item_id',
         'ticket_code',

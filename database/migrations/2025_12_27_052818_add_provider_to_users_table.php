@@ -9,11 +9,11 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('provider')->nullable()->after('email');
-            $table->string('provider_id')->nullable()->after('provider');
+            $table->string('provider')->nullable();
+            $table->string('provider_id')->nullable();
         });
     }
 
@@ -23,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['provider', 'provider_id']);
+            //
         });
     }
 };

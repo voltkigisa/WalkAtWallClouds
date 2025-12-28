@@ -46,19 +46,9 @@
                                     </div>
 
                                     @if(($ticketType->quota - $ticketType->sold) > 0)
-                                        <form action="{{ route('cart.add') }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="ticket_type_id" value="{{ $ticketType->id }}">
-                                            <input type="hidden" name="direct_checkout" value="1">
-                                            <div class="mb-4">
-                                                <label class="block text-xs text-gray-500 uppercase mb-2">Jumlah</label>
-                                                <input type="number" name="quantity" value="1" min="1" max="{{ min(10, $ticketType->quota - $ticketType->sold) }}" 
-                                                    class="w-full px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-white focus:border-indigo-500 focus:outline-none">
-                                            </div>
-                                            <button type="submit" class="block w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-center font-black rounded-xl transition duration-300 shadow-lg shadow-indigo-500/20 uppercase tracking-wider">
-                                                <i class="fa-solid fa-shopping-cart mr-2"></i>Beli Sekarang
-                                            </button>
-                                        </form>
+                                        <a href="{{ route('purchase.show', $ticketType) }}" class="block w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-center font-black rounded-xl transition duration-300 shadow-lg shadow-indigo-500/20 uppercase tracking-wider">
+                                            Beli Sekarang
+                                        </a>
                                     @else
                                         <button disabled class="block w-full py-3 bg-gray-700 text-gray-400 text-center font-black rounded-xl cursor-not-allowed uppercase tracking-wider">
                                             Terjual Habis

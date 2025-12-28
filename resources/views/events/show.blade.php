@@ -1,4 +1,4 @@
-<x-admin-layout title="Detail Event - WalkAtWallClouds">
+<x-layout title="Detail Event - WalkAtWallClouds">
     <main class="bg-gray-900 min-h-screen text-white py-12 flex justify-center">
         <div class="max-w-4xl w-full px-6">
             <div class="flex justify-between items-center mb-10">
@@ -53,4 +53,4 @@
             </div>
         </div>
     </main>
-</x-admin-layout>
+</x-layout>

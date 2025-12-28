@@ -1,59 +1,58 @@
-<x-admin-layout title="Daftar Ticket Type - WalkAtWallClouds">
-    <main class="fixed inset-0 bg-gray-900 flex items-center justify-center overflow-hidden ml-64 text-white">
-        <div class="max-w-6xl w-full px-8">
-            <div class="flex justify-between items-end mb-6">
-                <div>
-                    <h1 class="text-3xl font-black uppercase tracking-tighter italic">Manage <span class="text-indigo-500">Tickets</span></h1>
-                    <p class="text-gray-500 text-[10px] uppercase tracking-[0.2em] font-bold">Inventory & Pricing Control</p>
-                </div>
-                <a href="{{ route('ticket-types.create') }}" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl text-[10px] font-black uppercase tracking-widest transition shadow-lg shadow-indigo-500/20">
-                    + New Ticket Type
-                </a>
-            </div>
-
-            <div class="bg-black/40 border border-white/10 rounded-[2.5rem] overflow-hidden backdrop-blur-md shadow-2xl">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-white/5 border-b border-white/10 text-[10px] font-black uppercase tracking-widest text-indigo-400">
-                            <th class="p-5">Event</th>
-                            <th class="p-5">Ticket Name</th>
-                            <th class="p-5">Price</th>
-                            <th class="p-5 text-center">Quota</th>
-                            <th class="p-5 text-center">Sold</th>
-                            <th class="p-5 text-center">Available</th>
-                            <th class="p-5 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-white/5">
-                        @forelse($ticketTypes as $ticketType)
-                        <tr class="hover:bg-white/[0.02] transition">
-                            <td class="p-5 font-bold text-sm">{{ $ticketType->event->title ?? '-' }}</td>
-                            <td class="p-5 text-sm uppercase tracking-tighter font-black italic">{{ $ticketType->name }}</td>
-                            <td class="p-5 text-sm font-medium text-indigo-300">Rp {{ number_format($ticketType->price, 0, ',', '.') }}</td>
-                            <td class="p-5 text-center text-sm font-bold">{{ $ticketType->quota }}</td>
-                            <td class="p-5 text-center text-sm font-bold text-red-400">{{ $ticketType->sold }}</td>
-                            <td class="p-5 text-center text-sm font-bold {{ ($ticketType->quota - $ticketType->sold) > 0 ? 'text-green-400' : 'text-red-400' }}">
-                                {{ $ticketType->quota - $ticketType->sold }}
-                            </td>
-                            <td class="p-5">
-                                <div class="flex justify-end gap-3">
-                                    <a href="{{ route('ticket-types.show', $ticketType->id) }}" class="px-3 py-1.5 bg-gray-800/50 hover:bg-gray-700 text-[10px] font-black uppercase text-gray-400 hover:text-white transition rounded-lg">View</a>
-                                    <a href="{{ route('ticket-types.edit', $ticketType->id) }}" class="px-3 py-1.5 bg-indigo-600/20 hover:bg-indigo-600/30 text-[10px] font-black uppercase text-indigo-400 hover:text-indigo-300 transition rounded-lg">Edit</a>
-                                    <form action="{{ route('ticket-types.destroy', $ticketType->id) }}" method="POST" class="inline">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Yakin hapus?')" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-[10px] font-black uppercase text-red-500/70 hover:text-red-500 transition rounded-lg">Del</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="7" class="p-10 text-center text-gray-500 uppercase font-bold text-xs italic tracking-widest">No ticket data found.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-</x-admin-layout>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daftar Ticket Type</title>
+</head>
+<body>
+    <h1>Daftar Ticket Type</h1>
+    
+    @if(session('success'))
+        <p><strong>{{ session('success') }}</strong></p>
+    @endif
+    
+    <p>
+        <a href="{{ route('ticket-types.create') }}">+ Tambah Ticket Type Baru</a>
+    </p>
+    
+    <table border="1" cellpadding="10" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Event</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quota</th>
+                <th>Sold</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($ticketTypes as $ticketType)
+                <tr>
+                    <td>{{ $ticketType->id }}</td>
+                    <td>{{ $ticketType->event->title ?? '-' }}</td>
+                    <td>{{ $ticketType->name }}</td>
+                    <td>Rp {{ number_format($ticketType->price, 0, ',', '.') }}</td>
+                    <td>{{ $ticketType->quota }}</td>
+                    <td>{{ $ticketType->sold }}</td>
+                    <td>
+                        <a href="{{ route('ticket-types.show', $ticketType->id) }}">View</a> |
+                        <a href="{{ route('ticket-types.edit', $ticketType->id) }}">Edit</a> |
+                        <form action="{{ route('ticket-types.destroy', $ticketType->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" onclick="return confirm('Yakin ingin menghapus ticket type ini?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="7">Tidak ada data ticket type</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+    
+    <p><a href="/admin/dashboard">Kembali ke Dashboard</a></p>
+</body>
+</html>

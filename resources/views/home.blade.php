@@ -1,6 +1,5 @@
 <?php $title = 'Home - WalkAtWallClouds'; ?>
 <x-layout :$title>
-    <script src="https://cdn.tailwindcss.com"></script>
 
     <main class="bg-gray-900 min-h-screen text-white">
         <section id="home" class="relative max-w-7xl mx-auto px-6 py-12 lg:px-8">
@@ -67,10 +66,15 @@
 
         <section class="py-20 bg-black/20">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                
+                
+
                 <section id="guest-star" class="py-20scroll-mt-20">
                      <div class="mb-12 text-center">
                     <h2 class="text-3xl font-bold text-white mb-2 tracking-tight">GUEST STAR LINE-UP</h2>
                     <div class="h-1 w-20 bg-indigo-500 mx-auto"></div>
+                
+                
                 </div>
                 </section>
 
@@ -125,25 +129,30 @@
                             <h3 class="text-xl font-bold text-white mb-6 uppercase">Ticket Categories</h3>
                             
                             <div class="space-y-4">
-                                @forelse($ticketTypes as $index => $ticketType)
-                                <div class="flex items-center justify-between p-4 rounded-xl border {{ $index === 0 ? 'bg-gray-800/50 border-indigo-500/30' : 'bg-gray-800/30 border-white/5' }}">
+                                <div class="flex items-center justify-between p-4 bg-gray-800/50 rounded-xl border border-indigo-500/30">
                                     <div>
-                                        <h4 class="font-black text-white uppercase text-sm">{{ $ticketType->name }}</h4>
-                                        <p class="text-[10px] text-gray-500 font-bold uppercase">{{ $ticketType->quota - $ticketType->sold }} / {{ $ticketType->quota }} Available</p>
+                                        <h4 class="text-lg font-bold text-white">CAT 1 (Standing)</h4>
                                     </div>
-                                    <div class="text-right">
-                                        <p class="text-indigo-400 font-black text-lg">Rp {{ number_format($ticketType->price, 0, ',', '.') }}</p>
+                                    <p class="text-white font-black text-lg">Rp 1.000.000</p>
+                                </div>
+
+                                <div class="flex items-center justify-between p-4 bg-gray-800/30 rounded-xl border border-white/5">
+                                    <div>
+                                        <h4 class="text-lg font-bold text-white">CAT 2 (Standing)</h4>
                                     </div>
+                                    <p class="text-white font-black text-lg">Rp 700.000</p>
                                 </div>
-                                @empty
-                                <div class="p-4 bg-gray-800/30 rounded-xl border border-white/5 text-center">
-                                    <p class="text-gray-500 text-sm uppercase font-bold">No tickets available yet</p>
+
+                                <div class="flex items-center justify-between p-4 bg-gray-800/30 rounded-xl border border-white/5">
+                                    <div>
+                                        <h4 class="text-lg font-bold text-white">CAT 3 (Standing)</h4>
+                                    </div>
+                                    <p class="text-white font-black text-lg">Rp 500.000</p>
                                 </div>
-                                @endforelse
                             </div>
 
                             <div class="mt-8">
-                                <a href="{{ route('purchase.index') }}" class="block w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-center font-black rounded-xl transition duration-300 shadow-lg shadow-indigo-500/20 uppercase tracking-widest">
+                                <a href="#" class="block w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-center font-black rounded-xl transition duration-300 shadow-lg shadow-indigo-500/20 uppercase tracking-widest">
                                     Beli Tiket Sekarang
                                 </a>
                                 <p class="text-center text-gray-500 text-[10px] mt-4 uppercase">Harga belum termasuk pajak & biaya layanan</p>

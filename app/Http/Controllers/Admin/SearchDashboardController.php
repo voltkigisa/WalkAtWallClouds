@@ -7,61 +7,70 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Ticket;
 use App\Models\Payment;
-use App\Models\Event;
-use App\Models\Artist;
 
 class SearchDashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $query = $request->query('q');
+        $q = trim($request->query('q', ''));
+        $type = trim($request->query('type', ''));
+        $status = trim($request->query('status', ''));
+        $dateFrom = $request->query('date_from');
+        $dateTo = $request->query('date_to');
 
-        if (!$query || strlen($query) < 2) {
-            return response()->json([]);
+        if ($q === '') {
+            return response()->json([
+                'users' => [],
+                'tickets' => [],
+                'payments' => [],
+            ]);
         }
 
-        $results = collect();
+        // Users
+        $users = User::query()
+            ->when($q, fn($qb) => $qb->where(function($qq) use ($q) {
+                $qq->where('name', 'like', "%{$q}%")
+                   ->orWhere('email', 'like', "%{$q}%");
+            }))
+            ->limit(5)
+            ->get();
 
-        // Cari User / Pelanggan
-        $users = User::where('name', 'like', "%{$query}%")
-            ->orWhere('email', 'like', "%{$query}%")
-            ->limit(5)->get()->map(function($user) {
-                return [
-                    'id' => 'u-' . $user->id,
-                    'title' => $user->name,
-                    'category' => 'User Admin / Customer',
-                    'url' => '#', // Sesuaikan jika ada route detail user
-                    'image' => null
-                ];
-            });
+        // Tickets
+        $tickets = Ticket::query()
+            ->when($q, fn($qb) => $qb->where(function($qq) use ($q) {
+                $qq->where('ticket_code', 'like', "%{$q}%")
+                   ->orWhere('code', 'like', "%{$q}%");
+            }))
+            ->when($dateFrom, fn($qb) => $qb->whereDate('created_at', '>=', $dateFrom))
+            ->when($dateTo, fn($qb) => $qb->whereDate('created_at', '<=', $dateTo))
+            ->limit(5)
+            ->get();
 
-        // Cari Event (Internal)
-        $events = Event::where('title', 'like', "%{$query}%")
-            ->limit(5)->get()->map(function($event) {
-                return [
-                    'id' => 'ev-' . $event->id,
-                    'title' => $event->title,
-                    'category' => 'Event Management',
-                    'url' => route('events.index'),
-                    'image' => $event->image ? asset('storage/' . $event->image) : null
-                ];
-            });
+        // Payments
+        $payments = Payment::query()
+            ->when($q, fn($qb) => $qb->where(function($qq) use ($q) {
+                $qq->where('invoice', 'like', "%{$q}%")
+                   ->orWhere('status', 'like', "%{$q}%");
+            }))
+            ->when($status, fn($qb) => $qb->where('status', $status))
+            ->when($dateFrom, fn($qb) => $qb->whereDate('created_at', '>=', $dateFrom))
+            ->when($dateTo, fn($qb) => $qb->whereDate('created_at', '<=', $dateTo))
+            ->limit(5)
+            ->get();
 
-        // Cari Tiket berdasarkan Kode atau Judul
-        $tickets = Ticket::where('title', 'like', "%{$query}%")
-            ->limit(5)->get()->map(function($ticket) {
-                return [
-                    'id' => 't-' . $ticket->id,
-                    'title' => $ticket->title,
-                    'category' => 'Ticket Type',
-                    'url' => route('ticket-types.index'),
-                    'image' => null
-                ];
-            });
+        // Type gating
+        if ($type) {
+            return response()->json([
+                'users' => $type === 'users' ? $users : [],
+                'tickets' => $type === 'tickets' ? $tickets : [],
+                'payments' => $type === 'payments' ? $payments : [],
+            ]);
+        }
 
-        // Gabungkan dan kirim sebagai satu array
-        $final = $results->concat($users)->concat($events)->concat($tickets);
-
-        return response()->json($final);
+        return response()->json([
+            'users' => $users,
+            'tickets' => $tickets,
+            'payments' => $payments,
+        ]);
     }
 }
