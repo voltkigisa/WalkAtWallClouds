@@ -52,14 +52,14 @@
                                     <td class="p-4 text-right">
                                         <div class="text-xs font-black text-emerald-400 italic">Rp {{ number_format($orderItem->price * $orderItem->quantity, 0, ',', '.') }}</div>
                                     </td>
-                                    <td class="p-4 text-center">
-                                        <div class="flex justify-center gap-3">
-                                            <a href="{{ route('order-items.show', $orderItem->id) }}" class="text-[9px] font-black uppercase text-gray-400 hover:text-white transition">View</a>
-                                            <a href="{{ route('order-items.edit', $orderItem->id) }}" class="text-[9px] font-black uppercase text-indigo-400 hover:text-indigo-300 transition">Edit</a>
+                                    <td class="p-4">
+                                        <div class="flex justify-center gap-2">
+                                            <a href="{{ route('order-items.show', $orderItem->id) }}" class="px-2.5 py-1 bg-gray-800/50 hover:bg-gray-700 text-[9px] font-black uppercase text-gray-400 hover:text-white transition rounded-lg whitespace-nowrap">View</a>
+                                            <a href="{{ route('order-items.edit', $orderItem->id) }}" class="px-2.5 py-1 bg-indigo-600/20 hover:bg-indigo-600/30 text-[9px] font-black uppercase text-indigo-400 hover:text-indigo-300 transition rounded-lg whitespace-nowrap">Edit</a>
                                             <form action="{{ route('order-items.destroy', $orderItem->id) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" onclick="return confirm('Yakin ingin menghapus order item ini?')" class="text-[9px] font-black uppercase text-red-500/50 hover:text-red-500 transition">Del</button>
+                                                <button type="submit" onclick="return confirm('Yakin ingin menghapus order item ini?')" class="px-2.5 py-1 bg-red-500/10 hover:bg-red-500/20 text-[9px] font-black uppercase text-red-500/70 hover:text-red-500 transition rounded-lg whitespace-nowrap">Del</button>
                                             </form>
                                         </div>
                                     </td>

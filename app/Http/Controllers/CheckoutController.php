@@ -18,7 +18,7 @@ class CheckoutController extends Controller
      */
     public function index()
     {
-        $events = Event::where('status', 'active')->with('ticketTypes')->get();
+        $events = Event::where('status', 'published')->with('ticketTypes')->get();
         return view('purchase.index', compact('events'));
     }
 
@@ -31,28 +31,56 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Store the order and create tickets
+     * Show checkout form from cart
+     */
+    public function checkout()
+    {
+        $cart = session()->get('cart', []);
+        
+        if (empty($cart)) {
+            return redirect()->route('purchase.index')
+                ->with('error', 'Keranjang Anda kosong');
+        }
+
+        $total = 0;
+        foreach ($cart as $item) {
+            $total += $item['price'] * $item['quantity'];
+        }
+
+        return view('cart.checkout', compact('cart', 'total'));
+    }
+
+    /**
+     * Store the order and create tickets from cart
      */
     public function store(Request $request)
     {
         $request->validate([
-            'ticket_type_id' => ['required', 'exists:ticket_types,id'],
-            'quantity' => ['required', 'integer', 'min:1', 'max:10'],
             'payment_method' => ['required', 'in:transfer,card,e-wallet'],
         ]);
 
-        $ticketType = TicketType::findOrFail($request->ticket_type_id);
-        $quantity = $request->quantity;
+        $cart = session()->get('cart', []);
+        
+        if (empty($cart)) {
+            return redirect()->route('purchase.index')
+                ->with('error', 'Keranjang Anda kosong');
+        }
 
-        // Check stock availability
-        $available = $ticketType->quota - $ticketType->sold;
-        if ($quantity > $available) {
-            return back()->withErrors(['quantity' => "Stok tiket tidak cukup. Tersedia: $available tiket"]);
+        // Calculate total and validate stock
+        $totalPrice = 0;
+        foreach ($cart as $item) {
+            $ticketType = TicketType::find($item['ticket_type_id']);
+            $available = $ticketType->quota - $ticketType->sold;
+            
+            if ($item['quantity'] > $available) {
+                return back()->withErrors(['error' => "Stok {$ticketType->name} tidak cukup. Tersedia: $available tiket"]);
+            }
+            
+            $totalPrice += $item['price'] * $item['quantity'];
         }
 
         // Create Order
         $orderCode = 'ORD-' . date('YmdHis') . '-' . rand(1000, 9999);
-        $totalPrice = $ticketType->price * $quantity;
 
         $order = Order::create([
             'user_id' => Auth::id(),
@@ -61,28 +89,39 @@ class CheckoutController extends Controller
             'status' => 'pending',
         ]);
 
-        // Create OrderItem
-        $orderItem = OrderItem::create([
-            'order_id' => $order->id,
-            'ticket_type_id' => $ticketType->id,
-            'quantity' => $quantity,
-            'price' => $ticketType->price,
-        ]);
-
-        // Generate Tickets
-        for ($i = 0; $i < $quantity; $i++) {
-            $ticketCode = 'TKT-' . date('YmdHis') . '-' . str_pad($i + 1, 3, '0', STR_PAD_LEFT);
-            Ticket::create([
-                'order_item_id' => $orderItem->id,
-                'ticket_code' => $ticketCode,
-                'qr_code' => null,
-                'status' => 'issued',
-                'used_at' => null,
+        // Create OrderItems and Tickets from cart
+        foreach ($cart as $item) {
+            $subtotal = $item['price'] * $item['quantity'];
+            
+            $orderItem = OrderItem::create([
+                'order_id' => $order->id,
+                'ticket_type_id' => $item['ticket_type_id'],
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
+                'subtotal' => $subtotal,
             ]);
-        }
 
-        // Update ticket sold count
-        $ticketType->increment('sold', $quantity);
+            // Generate Tickets
+            for ($i = 0; $i < $item['quantity']; $i++) {
+                $ticketCode = 'TKT-' . date('YmdHis') . '-' . $order->id . '-' . str_pad($i + 1, 3, '0', STR_PAD_LEFT);
+                
+                // Generate simple QR code data (URL atau string unik)
+                $qrData = url('/verify-ticket/' . $ticketCode);
+                
+                Ticket::create([
+                    'order_item_id' => $orderItem->id,
+                    'ticket_code' => $ticketCode,
+                    'qr_code' => $qrData,
+                    'status' => 'unused', // Fix: gunakan 'unused' bukan 'issued'
+                    'used_at' => null,
+                ]);
+            }
+
+            // Update ticket sold count
+            $ticketType = TicketType::findOrFail($item['ticket_type_id']);
+            $ticketType->sold += $item['quantity'];
+            $ticketType->save();
+        }
 
         // Create Payment record
         Payment::create([
@@ -93,6 +132,9 @@ class CheckoutController extends Controller
             'status' => 'pending',
             'paid_at' => null,
         ]);
+
+        // Clear cart
+        session()->forget('cart');
 
         return redirect()->route('checkout.confirmation', $order->id)
             ->with('success', 'Order berhasil dibuat. Silahkan lakukan pembayaran.');

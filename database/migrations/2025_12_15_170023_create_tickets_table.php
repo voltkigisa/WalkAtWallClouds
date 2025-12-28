@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_item_id')->constrained()->cascadeOnDelete();
             $table->string('ticket_code')->unique();
-            $table->string('qr_code');
+            $table->string('qr_code')->nullable();
             $table->enum('status', ['unused','used','revoked'])->default('unused');
             $table->timestamp('used_at')->nullable();
         });
