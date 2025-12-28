@@ -1,0 +1,56 @@
+/* WalkAtWallClouds Custom Styles 
+*/
+
+/* 1. Efek Smooth Scroll & Prevent Layout Shift */
+html {
+    scroll-behavior: smooth;
+}
+
+[x-cloak] { 
+    display: none !important; 
+}
+
+/* 2. Custom Scrollbar (Opsional - Biar makin keren) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #111827; /* gray-900 */
+}
+::-webkit-scrollbar-thumb {
+    background: #4f46e5; /* indigo-600 */
+    border-radius: 10px;
+}
+
+/* 3. Animasi Progress Bar Carousel */
+#progress-bar {
+    height: 100%;
+    background-color: white;
+    width: 0%;
+}
+
+/* 4. Navbar Glassmorphism */
+.nav-glass {
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* 5. Mobile Menu Transition */
+#mobile-menu:not(.hidden) {
+    display: block;
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 6. Image Hover Effects */
+.img-zoom {
+    transition: transform 0.5s ease;
+}
+.img-zoom:hover {
+    transform: scale(1.05);
+}
