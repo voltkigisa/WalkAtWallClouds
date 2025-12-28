@@ -10,11 +10,15 @@ class OrderItem extends Model
     /** @use HasFactory<\Database\Factories\OrderItemFactory> */
     use HasFactory;
 
+    // Disable timestamps karena migration tidak punya created_at/updated_at
+    public $timestamps = false;
+
     protected $fillable = [
         'order_id',
         'ticket_type_id',
         'quantity',
         'price',
+        'subtotal',
     ];
 
     public function order()

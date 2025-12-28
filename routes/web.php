@@ -43,6 +43,27 @@ Route::get('/', function () {
 Route::get('/ticket', [CheckoutController::class, 'index'])->name('purchase.index');
 Route::get('/ticket/{ticketType}', [CheckoutController::class, 'show'])->name('purchase.show');
 
+// ===== CART =====
+use App\Http\Controllers\CartController;
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::patch('/cart/{itemId}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/{itemId}', [CartController::class, 'remove'])->name('cart.remove');
+Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
+Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
+
+// ===== CHECKOUT (Requires Auth) =====
+use App\Http\Controllers\MyTicketController;
+Route::middleware(['auth'])->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/confirmation/{order}', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
+    
+    // My Tickets
+    Route::get('/my-tickets', [MyTicketController::class, 'index'])->name('my-tickets.index');
+    Route::get('/my-tickets/{order}', [MyTicketController::class, 'show'])->name('my-tickets.show');
+});
+
 /*
 |--------------------------------------------------------------------------
 | Search Landing Page

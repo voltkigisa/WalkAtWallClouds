@@ -41,9 +41,9 @@
                     
                     <div class="hidden md:ml-12 md:block">
                         <div class="flex space-x-8">
-                            <a href="#home" class="text-sm font-bold text-gray-400 hover:text-indigo-400 transition uppercase tracking-widest">Home</a>
-                            <a href="#guest-star" class="text-sm font-bold text-gray-400 hover:text-indigo-400 transition uppercase tracking-widest">Guest Star</a>
-                            <a href="#ticket" class="text-sm font-bold text-gray-400 hover:text-indigo-400 transition uppercase tracking-widest">Ticket</a>
+                            <a href="/" class="text-sm font-bold text-gray-400 hover:text-indigo-400 transition uppercase tracking-widest">Home</a>
+                            <a href="/#guest-star" class="text-sm font-bold text-gray-400 hover:text-indigo-400 transition uppercase tracking-widest">Guest Star</a>
+                            <a href="/#ticket" class="text-sm font-bold text-gray-400 hover:text-indigo-400 transition uppercase tracking-widest">Ticket</a>
                         </div>
                     </div>
                 </div>
@@ -52,11 +52,21 @@
                     {{-- Tombol Search dihapus agar tidak memicu error Alpine --}}
 
                     <div class="flex items-center gap-4">
-                        <a href="#" class="relative group p-2.5 bg-white/5 border border-white/10 rounded-xl hover:bg-indigo-600/20 hover:border-indigo-500/50 transition">
+                        <a href="{{ route('cart.index') }}" class="relative group p-2.5 bg-white/5 border border-white/10 rounded-xl hover:bg-indigo-600/20 hover:border-indigo-500/50 transition">
                             <i class="fa-solid fa-cart-shopping text-gray-400 group-hover:text-indigo-400 transition text-sm"></i>
+                            @php
+                                $cart = session()->get('cart', []);
+                                $cartCount = array_sum(array_column($cart, 'quantity'));
+                            @endphp
+                            @if($cartCount > 0)
                             <span class="absolute -top-1.5 -right-1.5 bg-indigo-600 text-[9px] font-black w-5 h-5 flex items-center justify-center rounded-full border border-gray-900 shadow-lg group-hover:scale-110 transition">
+                                {{ $cartCount }}
+                            </span>
+                            @else
+                            <span class="absolute -top-1.5 -right-1.5 bg-gray-700 text-[9px] font-black w-5 h-5 flex items-center justify-center rounded-full border border-gray-900 shadow-lg">
                                 0
                             </span>
+                            @endif
                         </a>
 
                         @guest
@@ -97,6 +107,11 @@
                                     <a href="{{ route('users.show', auth()->id()) }}" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-indigo-400 hover:bg-indigo-500/10 transition group text-left">
                                         <i class="fa-solid fa-user group-hover:scale-110 transition"></i>
                                         MY PROFILE
+                                    </a>
+                                    
+                                    <a href="{{ route('my-tickets.index') }}" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-green-400 hover:bg-green-500/10 transition group text-left">
+                                        <i class="fa-solid fa-ticket group-hover:scale-110 transition"></i>
+                                        MY TICKETS
                                     </a>
                                     
                                     <form method="POST" action="{{ route('logout') }}">
