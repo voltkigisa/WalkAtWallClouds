@@ -142,7 +142,7 @@
                     <div class="flex items-center gap-4">
                         <a href="#" class="relative group p-2.5 bg-white/5 border border-white/10 rounded-xl hover:bg-indigo-600/20 hover:border-indigo-500/50 transition">
                             <i class="fa-solid fa-cart-shopping text-gray-400 group-hover:text-indigo-400 transition text-sm"></i>
-                            <span class="absolute -top-1.5 -right-1.5 bg-indigo-600 text-[9px] font-black w-4.5 h-4.5 flex items-center justify-center rounded-full border border-gray-900 shadow-lg group-hover:scale-110 transition">
+                            <span class="absolute -top-1.5 -right-1.5 bg-indigo-600 text-[9px] font-black w-5 h-5 flex items-center justify-center rounded-full border border-gray-900 shadow-lg group-hover:scale-110 transition">
                                 0
                             </span>
                         </a>
@@ -181,6 +181,11 @@
                                         <p class="text-xs font-bold text-white">{{ auth()->user()->name }}</p>
                                         <p class="text-[10px] text-gray-500">{{ auth()->user()->email }}</p>
                                     </div>
+                                    
+                                    <a href="{{ route('users.show', auth()->id()) }}" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-indigo-400 hover:bg-indigo-500/10 transition group text-left">
+                                        <i class="fa-solid fa-user group-hover:scale-110 transition"></i>
+                                        MY PROFILE
+                                    </a>
                                     
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
