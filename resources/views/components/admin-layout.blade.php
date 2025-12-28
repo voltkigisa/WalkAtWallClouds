@@ -72,6 +72,78 @@
                 </div>
             </header>
 
+            {{-- ADMIN FILTER PANEL --}}
+            <section class="px-8 pt-6">
+                <div class="bg-black rounded-2xl border border-gray-800 shadow-lg p-6">
+                    <form method="GET" action="{{ route('admin') }}" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                            <!-- Type -->
+                            <div>
+                                <label class="block text-[11px] font-medium text-gray-400 mb-1">Data Type</label>
+                                <select name="type" class="w-full bg-gray-900/60 border border-gray-700 rounded-md px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none">
+                                    <option value="events" {{ request('type', 'events') == 'events' ? 'selected' : '' }}>Events</option>
+                                    <option value="artists" {{ request('type') == 'artists' ? 'selected' : '' }}>Artists</option>
+                                    <option value="orders" {{ request('type') == 'orders' ? 'selected' : '' }}>Orders</option>
+                                    <option value="tickets" {{ request('type') == 'tickets' ? 'selected' : '' }}>Tickets</option>
+                                </select>
+                            </div>
+                            <!-- Search -->
+                            <div class="md:col-span-2">
+                                <label class="block text-[11px] font-medium text-gray-400 mb-1">Search</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-3 flex items-center">
+                                        <i class="fa-solid fa-magnifying-glass text-gray-500"></i>
+                                    </span>
+                                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search..." class="w-full bg-gray-900/60 border border-gray-700 rounded-md pl-9 pr-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none">
+                                </div>
+                            </div>
+                            <!-- Status -->
+                            <div>
+                                <label class="block text-[11px] font-medium text-gray-400 mb-1">Status</label>
+                                <select name="status" class="w-full bg-gray-900/60 border border-gray-700 rounded-md px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none">
+                                    <option value="">All Status</option>
+                                    <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published</option>
+                                    <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                                </select>
+                            </div>
+                            <!-- Date From -->
+                            <div>
+                                <label class="block text-[11px] font-medium text-gray-400 mb-1">Date From</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-3 flex items-center">
+                                        <i class="fa-solid fa-calendar text-gray-500"></i>
+                                    </span>
+                                    <input type="date" name="date_from" value="{{ request('date_from') }}" class="w-full bg-gray-900/60 border border-gray-700 rounded-md pl-9 pr-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none">
+                                </div>
+                            </div>
+                            <!-- Date To -->
+                            <div>
+                                <label class="block text-[11px] font-medium text-gray-400 mb-1">Date To</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-3 flex items-center">
+                                        <i class="fa-solid fa-calendar text-gray-500"></i>
+                                    </span>
+                                    <input type="date" name="date_to" value="{{ request('date_to') }}" class="w-full bg-gray-900/60 border border-gray-700 rounded-md pl-9 pr-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 justify-end">
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md text-sm font-semibold transition flex items-center gap-2">
+                                <i class="fa-solid fa-filter"></i>
+                                Apply Filter
+                            </button>
+                            <a href="{{ route('admin') }}" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-md text-sm font-semibold transition flex items-center gap-2">
+                                <i class="fa-solid fa-rotate-left"></i>
+                                Reset
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
             <main class="p-8">
                 {{ $slot }}
             </main>

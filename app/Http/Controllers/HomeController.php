@@ -37,8 +37,21 @@ class HomeController extends Controller
         // Get the first event for hero section
         $event = $events->first();
         
-        // Get all artists for guest star section
-        $artists = Artist::all();
+        // Filter artists
+        $artistQuery = Artist::query();
+        
+        if ($request->filled('artist_search')) {
+            $artistQuery->where(function($q) use ($request) {
+                $q->where('name', 'like', "%{$request->artist_search}%")
+                  ->orWhere('genre', 'like', "%{$request->artist_search}%");
+            });
+        }
+        
+        if ($request->filled('genre')) {
+            $artistQuery->where('genre', 'like', "%{$request->genre}%");
+        }
+        
+        $artists = $artistQuery->orderBy('name')->get();
         
         return view('home', compact('event', 'events', 'artists'));
     }

@@ -7,6 +7,9 @@ document.addEventListener('alpine:init', () => {
         return {
             showSearch: false,
             search: '',
+            location: '',
+            date: '',
+            type: '', // optional: events, artists, tickets
             isLoading: false,
             results: [],
             
@@ -17,7 +20,12 @@ document.addEventListener('alpine:init', () => {
                 }
                 this.isLoading = true;
                 try {
-                    const response = await fetch(`/api/search?q=${encodeURIComponent(this.search)}`);
+                    const params = new URLSearchParams();
+                    params.set('q', this.search);
+                    if (this.location) params.set('location', this.location);
+                    if (this.date) params.set('date', this.date);
+                    if (this.type) params.set('type', this.type);
+                    const response = await fetch(`/search?${params.toString()}`);
                     if (!response.ok) throw new Error('Network response was not ok');
                     const data = await response.json();
                     this.results = data; 

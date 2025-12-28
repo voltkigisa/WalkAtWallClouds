@@ -59,6 +59,47 @@
                 </div>
             </div>
 
+            <!-- Inline Filters for Live Search -->
+            <div class="px-6 py-4 border-b border-white/5 bg-gray-900/40 grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div>
+                    <label class="block text-[10px] text-gray-400 mb-1">Location</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-3 flex items-center">
+                            <i class="fa-solid fa-location-dot text-gray-500"></i>
+                        </span>
+                        <input x-model="location" type="text" placeholder="City or venue..." class="w-full bg-gray-900/60 border border-gray-700 text-white pl-9 pr-3 py-2 rounded-md text-sm focus:border-indigo-500 focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] text-gray-400 mb-1">Date</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-3 flex items-center">
+                            <i class="fa-solid fa-calendar text-gray-500"></i>
+                        </span>
+                        <input x-model="date" type="date" class="w-full bg-gray-900/60 border border-gray-700 text-white pl-9 pr-3 py-2 rounded-md text-sm focus:border-indigo-500 focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] text-gray-400 mb-1">Type</label>
+                    <select x-model="type" class="w-full bg-gray-900/60 border border-gray-700 text-white px-3 py-2 rounded-md text-sm focus:border-indigo-500 focus:outline-none">
+                        <option value="">All</option>
+                        <option value="events">Events</option>
+                        <option value="artists">Artists</option>
+                        <option value="tickets">Tickets</option>
+                    </select>
+                </div>
+                <div class="flex gap-2 md:justify-end">
+                    <button @click.prevent="fetchResults" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-md text-sm font-semibold transition flex items-center gap-2">
+                        <i class="fa-solid fa-filter"></i>
+                        Apply
+                    </button>
+                    <button @click.prevent="location=''; date=''; type=''; fetchResults()" class="bg-gray-700 hover:bg-gray-600 text-white px-5 py-2 rounded-md text-sm font-semibold transition flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Reset
+                    </button>
+                </div>
+            </div>
+
             <div class="max-h-[400px] overflow-y-auto p-4 bg-gray-900/50">
                 <div x-show="search.length === 0" class="text-center py-12">
                     <div class="w-16 h-16 bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/5">
@@ -182,6 +223,57 @@
             </div>
         </div>
     </nav>
+
+    {{-- USER FILTER BAR (Home only) --}}
+    @if (request()->routeIs('home'))
+    <div class="bg-black/70 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <form method="GET" action="{{ route('home') }}" class="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
+                <!-- Search -->
+                <div class="md:col-span-2">
+                    <label class="block text-[11px] text-gray-400 mb-1">Search Event</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-3 flex items-center">
+                            <i class="fa-solid fa-magnifying-glass text-gray-500"></i>
+                        </span>
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by title..." class="w-full bg-gray-900/60 border border-gray-700 text-white pl-9 pr-3 py-2 rounded-md text-sm focus:border-indigo-500 focus:outline-none">
+                    </div>
+                </div>
+                <!-- Location -->
+                <div>
+                    <label class="block text-[11px] text-gray-400 mb-1">Location</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-3 flex items-center">
+                            <i class="fa-solid fa-location-dot text-gray-500"></i>
+                        </span>
+                        <input type="text" name="location" value="{{ request('location') }}" placeholder="City or venue..." class="w-full bg-gray-900/60 border border-gray-700 text-white pl-9 pr-3 py-2 rounded-md text-sm focus:border-indigo-500 focus:outline-none">
+                    </div>
+                </div>
+                <!-- Date -->
+                <div>
+                    <label class="block text-[11px] text-gray-400 mb-1">Date</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-3 flex items-center">
+                            <i class="fa-solid fa-calendar text-gray-500"></i>
+                        </span>
+                        <input type="date" name="date" value="{{ request('date') }}" class="w-full bg-gray-900/60 border border-gray-700 text-white pl-9 pr-3 py-2 rounded-md text-sm focus:border-indigo-500 focus:outline-none">
+                    </div>
+                </div>
+                <!-- Actions -->
+                <div class="flex gap-2 md:justify-end">
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-md text-sm font-semibold transition flex items-center gap-2">
+                        <i class="fa-solid fa-filter"></i>
+                        Apply
+                    </button>
+                    <a href="{{ route('home') }}" class="bg-gray-700 hover:bg-gray-600 text-white px-5 py-2 rounded-md text-sm font-semibold transition flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    @endif
 
     <main class="flex-grow">
         {{ $slot }}
