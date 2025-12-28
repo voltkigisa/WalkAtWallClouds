@@ -9,6 +9,7 @@ use App\Http\Controllers\SearchLandingController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\OrderController;
@@ -31,11 +32,7 @@ use App\Http\Controllers\Admin\SearchDashboardController;
 | Public Route
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    $artists = Artist::all();
-    $event = Event::where('status', 'published')->with('artists')->first();
-    return view('home', compact('artists', 'event'));
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // ===== TICKET PURCHASE =====
 Route::get('/ticket', [CheckoutController::class, 'index'])->name('purchase.index');

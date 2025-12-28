@@ -21,6 +21,56 @@
         </div>
     </div>
 
+    <!-- Filter Panel -->
+    <div class="bg-black rounded-2xl border border-gray-800 shadow-lg p-6 mb-6">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400 mb-4">Filter Events</h3>
+        <form method="GET" action="{{ route('admin') }}" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Search Input -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-2"><i class="fa-solid fa-magnifying-glass"></i> Search</label>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Title or location..." class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none">
+                </div>
+                
+                <!-- Status Dropdown -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-2"><i class="fa-solid fa-circle-info"></i> Status</label>
+                    <select name="status" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none">
+                        <option value="">All Status</option>
+                        <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published</option>
+                        <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                    </select>
+                </div>
+                
+                <!-- Date From -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-2"><i class="fa-solid fa-calendar"></i> Date From</label>
+                    <input type="date" name="date_from" value="{{ request('date_from') }}" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none">
+                </div>
+                
+                <!-- Date To -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-2"><i class="fa-solid fa-calendar"></i> Date To</label>
+                    <input type="date" name="date_to" value="{{ request('date_to') }}" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none">
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex gap-3">
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2">
+                    <i class="fa-solid fa-filter"></i>
+                    Apply Filter
+                </button>
+                <a href="{{ route('admin') }}" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Events Table -->
     <div class="bg-black rounded-3xl border border-gray-800 shadow-2xl overflow-hidden">
         <div class="p-6 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>

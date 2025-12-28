@@ -1,6 +1,5 @@
 <?php $title = 'Home - WalkAtWallClouds'; ?>
 <x-layout :$title>
-    <script src="https://cdn.tailwindcss.com"></script>
 
     <main class="bg-gray-900 min-h-screen text-white">
         <section id="home" class="relative max-w-7xl mx-auto px-6 py-12 lg:px-8">
@@ -67,6 +66,42 @@
 
         <section class="py-20 bg-black/20">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                
+                <!-- User Filter Bar -->
+                <div class="mb-10 bg-gray-800/30 backdrop-blur-sm rounded-xl border border-white/10 p-4">
+                    <form method="GET" action="{{ route('home') }}" class="flex flex-col md:flex-row gap-3 items-end">
+                        <!-- Search -->
+                        <div class="flex-1">
+                            <label class="block text-xs text-gray-400 mb-1"><i class="fa-solid fa-magnifying-glass"></i> Search Event</label>
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by title..." class="w-full bg-gray-900/50 border border-gray-700 text-white px-3 py-2 rounded-lg text-sm focus:border-indigo-500 focus:outline-none">
+                        </div>
+                        
+                        <!-- Location -->
+                        <div class="flex-1">
+                            <label class="block text-xs text-gray-400 mb-1"><i class="fa-solid fa-location-dot"></i> Location</label>
+                            <input type="text" name="location" value="{{ request('location') }}" placeholder="City or venue..." class="w-full bg-gray-900/50 border border-gray-700 text-white px-3 py-2 rounded-lg text-sm focus:border-indigo-500 focus:outline-none">
+                        </div>
+                        
+                        <!-- Date -->
+                        <div class="flex-1">
+                            <label class="block text-xs text-gray-400 mb-1"><i class="fa-solid fa-calendar"></i> Date</label>
+                            <input type="date" name="date" value="{{ request('date') }}" class="w-full bg-gray-900/50 border border-gray-700 text-white px-3 py-2 rounded-lg text-sm focus:border-indigo-500 focus:outline-none">
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="flex gap-2">
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap flex items-center gap-2">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                Apply
+                            </button>
+                            <a href="{{ route('home') }}" class="bg-gray-700 hover:bg-gray-600 text-white px-5 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap flex items-center gap-2">
+                                <i class="fa-solid fa-rotate-left"></i>
+                                Reset
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
                 <section id="guest-star" class="py-20scroll-mt-20">
                      <div class="mb-12 text-center">
                     <h2 class="text-3xl font-bold text-white mb-2 tracking-tight">GUEST STAR LINE-UP</h2>
