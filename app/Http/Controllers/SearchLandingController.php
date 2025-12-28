@@ -10,29 +10,45 @@ class SearchLandingController extends Controller
 {
     public function index(Request $request)
     {
-        // STEP 4: ambil keyword dari URL ?q=
-        $q = $request->query('q');
+        $q = trim($request->query('q', ''));
+        $location = trim($request->query('location', ''));
+        $date = trim($request->query('date', ''));
+        $type = trim($request->query('type', ''));
 
-        // Kalau belum ngetik apa-apa
-        if (!$q) {
+        if ($q === '') {
             return response()->json([
                 'events' => [],
-                'artists' => []
+                'artists' => [],
+                'tickets' => []
             ]);
         }
 
-        // STEP 5 + 6: query + optimasi
-        return response()->json([
-            'events' => Event::select('id', 'title', 'event_date', 'location')
-                ->where('title', 'like', "%{$q}%")
-                ->limit(5)
-                ->get(),
+        // Events filter
+        $eventsQuery = Event::select('id', 'title', 'event_date', 'location')
+            ->when($q, fn($qbuilder) => $qbuilder->where('title', 'like', "%{$q}%"))
+            ->when($location, fn($qbuilder) => $qbuilder->where('location', 'like', "%{$location}%"))
+            ->when($date, fn($qbuilder) => $qbuilder->whereDate('event_date', $date))
+            ->orderBy('event_date', 'desc')
+            ->limit(5);
 
-            'artists' => Artist::select('id', 'name', 'genre')
-                ->where('name', 'like', "%{$q}%")
-                ->orWhere('genre', 'like', "%{$q}%")
-                ->limit(5)
-                ->get(),
+        // Artists filter
+        $artistsQuery = Artist::select('id', 'name', 'genre')
+            ->when($q, function ($qbuilder) use ($q) {
+                $qbuilder->where(function ($qq) use ($q) {
+                    $qq->where('name', 'like', "%{$q}%")
+                       ->orWhere('genre', 'like', "%{$q}%");
+                });
+            })
+            ->orderBy('name')
+            ->limit(5);
+
+        // Type gating (if provided)
+        $events = ($type && $type !== 'events') ? collect() : $eventsQuery->get();
+        $artists = ($type && $type !== 'artists') ? collect() : $artistsQuery->get();
+
+        return response()->json([
+            'events' => $events,
+            'artists' => $artists,
         ]);
     }
 }

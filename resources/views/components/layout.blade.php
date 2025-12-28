@@ -18,7 +18,7 @@
 
     @stack('styles')
 </head>
-<body x-data="searchHandler()" 
+<body x-data="searchHandler('/search')" 
       @keydown.escape.window="showSearch = false"
       @keydown.window.ctrl.k.prevent="showSearch = true"
       class="bg-gray-900 min-h-screen text-gray-100 flex flex-col">
@@ -224,56 +224,7 @@
         </div>
     </nav>
 
-    {{-- USER FILTER BAR (Home only) --}}
-    @if (request()->routeIs('home'))
-    <div class="bg-black/70 border-b border-white/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <form method="GET" action="{{ route('home') }}" class="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
-                <!-- Search -->
-                <div class="md:col-span-2">
-                    <label class="block text-[11px] text-gray-400 mb-1">Search Event</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-3 flex items-center">
-                            <i class="fa-solid fa-magnifying-glass text-gray-500"></i>
-                        </span>
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by title..." class="w-full bg-gray-900/60 border border-gray-700 text-white pl-9 pr-3 py-2 rounded-md text-sm focus:border-indigo-500 focus:outline-none">
-                    </div>
-                </div>
-                <!-- Location -->
-                <div>
-                    <label class="block text-[11px] text-gray-400 mb-1">Location</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-3 flex items-center">
-                            <i class="fa-solid fa-location-dot text-gray-500"></i>
-                        </span>
-                        <input type="text" name="location" value="{{ request('location') }}" placeholder="City or venue..." class="w-full bg-gray-900/60 border border-gray-700 text-white pl-9 pr-3 py-2 rounded-md text-sm focus:border-indigo-500 focus:outline-none">
-                    </div>
-                </div>
-                <!-- Date -->
-                <div>
-                    <label class="block text-[11px] text-gray-400 mb-1">Date</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-3 flex items-center">
-                            <i class="fa-solid fa-calendar text-gray-500"></i>
-                        </span>
-                        <input type="date" name="date" value="{{ request('date') }}" class="w-full bg-gray-900/60 border border-gray-700 text-white pl-9 pr-3 py-2 rounded-md text-sm focus:border-indigo-500 focus:outline-none">
-                    </div>
-                </div>
-                <!-- Actions -->
-                <div class="flex gap-2 md:justify-end">
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-md text-sm font-semibold transition flex items-center gap-2">
-                        <i class="fa-solid fa-filter"></i>
-                        Apply
-                    </button>
-                    <a href="{{ route('home') }}" class="bg-gray-700 hover:bg-gray-600 text-white px-5 py-2 rounded-md text-sm font-semibold transition flex items-center gap-2">
-                        <i class="fa-solid fa-rotate-left"></i>
-                        Reset
-                    </a>
-                </div>
-            </form>
-        </div>
-    </div>
-    @endif
+    {{-- USER FILTER BAR removed; filters are now inside the live search modal --}}
 
     <main class="flex-grow">
         {{ $slot }}
