@@ -1,12 +1,13 @@
-<x-admin-layout title="Tambah Event Baru - WalkAtWallClouds">
+<x-admin-layout title="Tambah Artist Baru - WalkAtWallClouds">
     <main class="fixed inset-0 bg-gray-900 flex items-center justify-center overflow-hidden ml-64 text-white">
         <div class="max-w-xl w-full px-8">
             
             {{-- Header --}}
             <div class="text-center mb-6 mt-12">
-                <h1 class="text-2xl font-black uppercase tracking-tighter italic">Tambah <span class="text-indigo-500">Artist</span></h1>
-                <p class="text-gray-500 text-[10px] mt-1 uppercase tracking-[0.2em] font-bold">New Music Celebration</p>
-                <div class="h-1 w-12 bg-indigo-500 mx-auto mt-2"></div>
+                <span class="text-indigo-500 font-bold uppercase tracking-[0.2em] text-[10px]">Admin Mode</span>
+                <h1 class="text-2xl font-black uppercase tracking-tighter mt-1 italic">
+                    Create <span class="text-indigo-500">New Artist</span>
+                </h1>
             </div>
 
             {{-- Error Handling --}}
@@ -19,80 +20,73 @@
             @endif
 
             {{-- Form Create --}}
-            <form action="{{ route('events.store') }}" method="POST" class="space-y-3 bg-black/40 p-6 rounded-[2.5rem] border border-white/10 shadow-2xl backdrop-blur-md">
+            <form action="{{ route('artists.store') }}" method="POST" enctype="multipart/form-data" 
+                class="space-y-4 bg-black/40 p-6 rounded-[2.5rem] border border-white/10 shadow-2xl backdrop-blur-md">
                 @csrf
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {{-- Event Title --}}
-                    <div class="md:col-span-2">
-                        <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">Event Title</label>
-                        <input type="text" name="title" value="{{ old('title') }}" placeholder="Contoh: Clouds Festival" required 
-                            class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition font-medium">
-                    </div>
-
-                    {{-- Genre (BARU) --}}
+                <div class="space-y-3">
+                    {{-- Artist Name --}}
                     <div>
-                        <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">Genre</label>
-                        <input type="text" name="genre" value="{{ old('genre') }}" placeholder="Rock, Pop, Techno" required 
-                            class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition font-medium">
+                        <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">Artist Name</label>
+                        <input type="text" name="name" value="{{ old('name') }}" placeholder="e.g. The Weeknd" required 
+                            class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition font-bold text-white">
                     </div>
 
-                    {{-- Country (BARU) --}}
+                    {{-- Genre & Country --}}
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">Genre</label>
+                            <input type="text" name="genre" value="{{ old('genre') }}" placeholder="Rock, Pop, Indie" required 
+                                class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition font-bold text-white">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">Country</label>
+                            <input type="text" name="country" value="{{ old('country') }}" placeholder="Indonesia" required 
+                                class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition font-bold text-white">
+                        </div>
+                    </div>
+
+                    {{-- Photo Upload --}}
                     <div>
-                        <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">Country</label>
-                        <input type="text" name="country" value="{{ old('country') }}" placeholder="Indonesia" required 
-                            class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition font-medium">
+                        <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">Profile Photo</label>
+                        <input type="file" name="photo" required
+                            class="w-full text-[10px] text-gray-400 bg-white/5 border border-white/10 rounded-xl p-3 
+                            file:mr-3 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[9px] file:font-black file:uppercase 
+                            file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 transition cursor-pointer">
                     </div>
 
-                    {{-- Location --}}
+                    {{-- Assign to Events --}}
                     <div>
-                        <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">Location / Venue</label>
-                        <input type="text" name="location" value="{{ old('location') }}" placeholder="Nama Lokasi" required 
-                            class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition font-medium">
+                        <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">Assign to Events (Optional)</label>
+                        <div class="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                            @foreach($events as $event)
+                                <label class="flex items-center gap-3 p-2 bg-white/5 border border-white/5 rounded-lg cursor-pointer hover:bg-white/10 transition">
+                                    <input type="checkbox" name="events[]" value="{{ $event->id }}" 
+                                        {{ in_array($event->id, old('events', [])) ? 'checked' : '' }}
+                                        class="w-3 h-3 rounded border-white/10 text-indigo-600 focus:ring-indigo-500 bg-gray-900">
+                                    <span class="text-[10px] font-bold uppercase tracking-tight text-white">{{ $event->title }}</span>
+                                </label>
+                            @endforeach
+                        </div>
                     </div>
-
-                    {{-- Event Date --}}
-                    <div>
-                        <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">Event Date</label>
-                        <input type="date" name="event_date" value="{{ old('event_date') }}" required 
-                            class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-gray-400 focus:border-indigo-500 outline-none transition font-medium">
-                    </div>
-
-                    {{-- Start Time --}}
-                    <div>
-                        <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">Start Time</label>
-                        <input type="time" name="start_time" value="{{ old('start_time') }}" required 
-                            class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-gray-400 focus:border-indigo-500 outline-none transition">
-                    </div>
-
-                    {{-- End Time --}}
-                    <div>
-                        <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">End Time</label>
-                        <input type="time" name="end_time" value="{{ old('end_time') }}" required 
-                            class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-gray-400 focus:border-indigo-500 outline-none transition">
-                    </div>
-                </div>
-
-                {{-- Status --}}
-                <div>
-                    <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">Status</label>
-                    <select name="status" required class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-gray-400 focus:border-indigo-500 outline-none appearance-none transition">
-                        <option value="draft">Draft</option>
-                        <option value="active">Active</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
                 </div>
 
                 {{-- Action Buttons --}}
                 <div class="pt-4 flex gap-3">
                     <button type="submit" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-xl transition shadow-lg shadow-indigo-500/20 uppercase tracking-widest text-[10px]">
-                        Simpan Event
+                        Save Artist
                     </button>
-                    <a href="{{ route('events.index') }}" class="flex-1 py-3 bg-white/5 hover:bg-white/10 text-white text-center font-black rounded-xl transition uppercase tracking-widest text-[10px] border border-white/10">
-                        Batal
+                    <a href="{{ route('artists.index') }}" class="flex-1 py-3 bg-white/5 hover:bg-white/10 text-white text-center font-black rounded-xl transition uppercase tracking-widest text-[10px] border border-white/10">
+                        Cancel
                     </a>
                 </div>
             </form>
         </div>
     </main>
+
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 10px; }
+    </style>
 </x-admin-layout>

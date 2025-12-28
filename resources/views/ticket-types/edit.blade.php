@@ -52,9 +52,9 @@
                                 class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:border-indigo-500 outline-none transition text-white">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-black text-red-400 uppercase mb-1 tracking-widest">Sold Amount</label>
-                            <input type="number" name="sold" value="{{ old('sold', $ticketType->sold) }}" required 
-                                class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:border-red-500 outline-none transition text-white">
+                            <label class="block text-[10px] font-black text-gray-500 uppercase mb-1 tracking-widest">Sold Amount (Read Only)</label>
+                            <input type="number" value="{{ $ticketType->sold }}" readonly 
+                                class="w-full bg-gray-800/50 border border-gray-700 rounded-xl p-3 text-sm outline-none text-gray-400 cursor-not-allowed">
                         </div>
                     </div>
                 </div>

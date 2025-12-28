@@ -63,9 +63,8 @@
                         <label class="block text-[10px] font-black text-indigo-400 uppercase mb-1 tracking-widest">Status</label>
                         <select name="status" required class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-gray-400 focus:border-indigo-500 outline-none transition font-medium appearance-none">
                             <option value="draft" {{ old('status', $event->status) == 'draft' ? 'selected' : '' }}>Draft</option>
-                            <option value="active" {{ old('status', $event->status) == 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="published" {{ old('status', $event->status) == 'published' ? 'selected' : '' }}>Published</option>
                             <option value="cancelled" {{ old('status', $event->status) == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                            <option value="completed" {{ old('status', $event->status) == 'completed' ? 'selected' : '' }}>Completed</option>
                         </select>
                     </div>
                 </div>

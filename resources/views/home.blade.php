@@ -125,26 +125,21 @@
                             <h3 class="text-xl font-bold text-white mb-6 uppercase">Ticket Categories</h3>
                             
                             <div class="space-y-4">
-                                <div class="flex items-center justify-between p-4 bg-gray-800/50 rounded-xl border border-indigo-500/30">
+                                @forelse($ticketTypes as $index => $ticketType)
+                                <div class="flex items-center justify-between p-4 rounded-xl border {{ $index === 0 ? 'bg-gray-800/50 border-indigo-500/30' : 'bg-gray-800/30 border-white/5' }}">
                                     <div>
-                                        <h4 class="text-lg font-bold text-white">CAT 1 (Standing)</h4>
+                                        <h4 class="font-black text-white uppercase text-sm">{{ $ticketType->name }}</h4>
+                                        <p class="text-[10px] text-gray-500 font-bold uppercase">{{ $ticketType->quota - $ticketType->sold }} / {{ $ticketType->quota }} Available</p>
                                     </div>
-                                    <p class="text-white font-black text-lg">Rp 1.000.000</p>
-                                </div>
-
-                                <div class="flex items-center justify-between p-4 bg-gray-800/30 rounded-xl border border-white/5">
-                                    <div>
-                                        <h4 class="text-lg font-bold text-white">CAT 2 (Standing)</h4>
+                                    <div class="text-right">
+                                        <p class="text-indigo-400 font-black text-lg">Rp {{ number_format($ticketType->price, 0, ',', '.') }}</p>
                                     </div>
-                                    <p class="text-white font-black text-lg">Rp 700.000</p>
                                 </div>
-
-                                <div class="flex items-center justify-between p-4 bg-gray-800/30 rounded-xl border border-white/5">
-                                    <div>
-                                        <h4 class="text-lg font-bold text-white">CAT 3 (Standing)</h4>
-                                    </div>
-                                    <p class="text-white font-black text-lg">Rp 500.000</p>
+                                @empty
+                                <div class="p-4 bg-gray-800/30 rounded-xl border border-white/5 text-center">
+                                    <p class="text-gray-500 text-sm uppercase font-bold">No tickets available yet</p>
                                 </div>
+                                @endforelse
                             </div>
 
                             <div class="mt-8">

@@ -34,7 +34,8 @@ use App\Http\Controllers\Admin\SearchDashboardController;
 Route::get('/', function () {
     $artists = Artist::all();
     $event = Event::where('status', 'published')->with('artists')->first();
-    return view('home', compact('artists', 'event'));
+    $ticketTypes = $event ? $event->ticketTypes()->orderBy('price')->get() : collect();
+    return view('home', compact('artists', 'event', 'ticketTypes'));
 });
 
 // ===== TICKET PURCHASE =====
