@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('qr_code')->nullable();
             $table->enum('status', ['unused','used','revoked'])->default('unused');
             $table->timestamp('used_at')->nullable();
+            $table->timestamps();
         });
     }
 

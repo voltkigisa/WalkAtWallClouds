@@ -101,22 +101,9 @@ class CheckoutController extends Controller
                 'subtotal' => $subtotal,
             ]);
 
-            // Generate Tickets
-            for ($i = 0; $i < $item['quantity']; $i++) {
-                $ticketCode = 'TKT-' . date('YmdHis') . '-' . $order->id . '-' . str_pad($i + 1, 3, '0', STR_PAD_LEFT);
-                
-                // Generate simple QR code data (URL atau string unik)
-                $qrData = url('/verify-ticket/' . $ticketCode);
-                
-                Ticket::create([
-                    'order_item_id' => $orderItem->id,
-                    'ticket_code' => $ticketCode,
-                    'qr_code' => $qrData,
-                    'status' => 'unused', // Fix: gunakan 'unused' bukan 'issued'
-                    'used_at' => null,
-                ]);
-            }
-
+            // JANGAN generate tickets di sini - akan di-generate setelah payment success
+            // Generate Tickets setelah payment berhasil di PaymentController
+            
             // Update ticket sold count
             $ticketType = TicketType::findOrFail($item['ticket_type_id']);
             $ticketType->sold += $item['quantity'];
@@ -136,8 +123,9 @@ class CheckoutController extends Controller
         // Clear cart
         session()->forget('cart');
 
-        return redirect()->route('checkout.confirmation', $order->id)
-            ->with('success', 'Order berhasil dibuat. Silahkan lakukan pembayaran.');
+        // Redirect to payment page with Midtrans
+        return redirect()->route('payment.create', $order->id)
+            ->with('success', 'Order berhasil dibuat! Silakan lanjutkan pembayaran.');
     }
 
     /**

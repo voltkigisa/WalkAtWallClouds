@@ -116,14 +116,27 @@
                                         </div>
                                     </div>
                                     @endif
-
                                     @if($order->payment && $order->payment->status === 'paid')
-                                    <div class="flex gap-2">
-                                        <button class="flex-1 py-2 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 text-xs font-bold rounded-lg transition border border-indigo-600/30"
-                                            onclick="addToCalendar('{{ $item->ticketType->event->title }}', '{{ $item->ticketType->event->event_date }}', '{{ $item->ticketType->event->location }}')">
-                                            <i class="fa-solid fa-calendar-plus mr-1"></i>Add to Calendar
-                                        </button>
-                                    </div>
+                                        <div class="flex gap-2">
+                                            @if(session()->has('google_access_token'))
+                                                <!-- Authorized - Direct add to calendar -->
+                                                <form action="{{ route('calendar.add-event') }}" method="POST" class="flex-1">
+                                                    @csrf
+                                                    <input type="hidden" name="event_title" value="{{ $item->ticketType->event->title }}">
+                                                    <input type="hidden" name="event_date" value="{{ $item->ticketType->event->event_date }}">
+                                                    <input type="hidden" name="event_location" value="{{ $item->ticketType->event->location }}">
+                                                    <input type="hidden" name="ticket_code" value="{{ $ticket->ticket_code }}">
+                                                    <button type="submit" class="w-full py-2 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 text-xs font-bold rounded-lg transition border border-indigo-600/30">
+                                                        <i class="fa-brands fa-google mr-1"></i>Add to Google Calendar
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <!-- Not authorized - Redirect to OAuth -->
+                                                <a href="{{ route('google-calendar.auth') }}" class="flex-1 py-2 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 text-xs font-bold rounded-lg transition border border-indigo-600/30 text-center">
+                                                    <i class="fa-brands fa-google mr-1"></i>Connect Google Calendar
+                                                </a>
+                                            @endif
+                                        </div>
                                     @endif
                                 </div>
                             </div>
@@ -135,18 +148,25 @@
             </div>
 
             <!-- Payment Instructions if Pending -->
-            @if($order->payment && $order->payment->status === 'pending')
+            @if($order->payment && $order->payment->status !== 'paid' && $order->payment->status !== 'success')
             <div class="bg-yellow-600/10 border border-yellow-600/30 rounded-2xl p-6">
                 <h3 class="text-lg font-black text-yellow-400 mb-4">
-                    <i class="fa-solid fa-exclamation-circle mr-2"></i>Segera Selesaikan Pembayaran
+                    <i class="fa-solid fa-exclamation-circle mr-2"></i>Menunggu Konfirmasi Pembayaran
                 </h3>
                 <p class="text-sm text-gray-400 mb-4">
-                    Tiket Anda akan aktif setelah pembayaran dikonfirmasi. Silahkan transfer ke rekening yang telah ditentukan dan gunakan kode order sebagai referensi.
+                    Pembayaran Anda sedang diproses. Klik tombol di bawah untuk cek status pembayaran terbaru dari Midtrans atau bayar ulang jika diperlukan.
                 </p>
                 <div class="flex gap-3">
-                    <button class="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-black rounded-xl transition">
-                        Konfirmasi Pembayaran
-                    </button>
+                    <form action="{{ route('payment.check-status', $order->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-black rounded-xl transition">
+                            <i class="fa-solid fa-refresh mr-2"></i>Cek Status Pembayaran
+                        </button>
+                    </form>
+                    
+                    <a href="{{ route('payment.create', $order->id) }}" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-xl transition inline-block">
+                        <i class="fa-solid fa-credit-card mr-2"></i>Bayar Sekarang
+                    </a>
                 </div>
             </div>
             @endif

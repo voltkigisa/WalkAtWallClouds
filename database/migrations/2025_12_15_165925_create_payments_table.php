@@ -16,8 +16,11 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained()->cascadeOnDelete();
             $table->string('payment_method');
             $table->string('payment_reference')->nullable();
+            $table->string('transaction_id')->nullable(); // Midtrans transaction ID
+            $table->string('snap_token')->nullable(); // Snap token untuk payment popup
+            $table->text('payment_data')->nullable(); // JSON untuk store full response
             $table->integer('amount');
-            $table->enum('status', ['pending','success','failed'])->default('pending');
+            $table->enum('status', ['pending','paid','success','failed'])->default('pending');
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });
