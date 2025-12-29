@@ -56,11 +56,11 @@ class UserController extends Controller
         }
 
         // Load user relationships with statistics
-        $user->load(['orders.orderItems.ticketType.event', 'orders.payment']);
+        $user->load(['orders.items.ticketType.event', 'orders.payment']);
         
         // Calculate statistics
         $totalTickets = $user->orders->sum(function($order) {
-            return $order->orderItems->sum('quantity');
+            return $order->items->sum('quantity');
         });
         
         $totalSpent = $user->orders->where('payment.status', 'paid')->sum(function($order) {
@@ -69,12 +69,12 @@ class UserController extends Controller
         
         // Get unique events attended
         $eventsAttended = $user->orders->flatMap(function($order) {
-            return $order->orderItems->pluck('ticketType.event');
+            return $order->items->pluck('ticketType.event');
         })->unique('id')->filter();
         
         // Get ticket types purchased
         $ticketTypes = $user->orders->flatMap(function($order) {
-            return $order->orderItems->map(function($item) {
+            return $order->items->map(function($item) {
                 return [
                     'name' => $item->ticketType->name,
                     'quantity' => $item->quantity,
