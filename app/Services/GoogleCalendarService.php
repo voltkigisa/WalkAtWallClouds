@@ -16,9 +16,9 @@ class GoogleCalendarService
     public function __construct()
     {
         $this->client = new Client();
-        $this->client->setClientId(config('services.google.client_id'));
-        $this->client->setClientSecret(config('services.google.client_secret'));
-        $this->client->setRedirectUri(config('services.google.redirect'));
+        $this->client->setClientId(config('services.google_calendar.client_id'));
+        $this->client->setClientSecret(config('services.google_calendar.client_secret'));
+        $this->client->setRedirectUri(config('services.google_calendar.redirect'));
         $this->client->addScope(Calendar::CALENDAR_EVENTS);
         $this->client->setAccessType('offline');
         $this->client->setPrompt('consent');
