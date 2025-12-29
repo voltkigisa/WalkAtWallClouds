@@ -17,10 +17,13 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\TicketTypeController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\SocialAuthController;
 use App\Models\Artist;
 use App\Models\Event;
+use App\Http\Controllers\GoogleCalendarController;
 
 //  LIVE SEARCH DASHBOARD
 use App\Http\Controllers\Admin\SearchDashboardController;
@@ -41,6 +44,26 @@ Route::get('/', function () {
 // ===== TICKET PURCHASE =====
 Route::get('/ticket', [CheckoutController::class, 'index'])->name('purchase.index');
 Route::get('/ticket/{ticketType}', [CheckoutController::class, 'show'])->name('purchase.show');
+
+// ===== CART =====
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::patch('/cart/{itemId}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/{itemId}', [CartController::class, 'remove'])->name('cart.remove');
+Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
+Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
+
+// ===== CHECKOUT (Requires Auth) =====
+use App\Http\Controllers\MyTicketController;
+Route::middleware(['auth'])->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/confirmation/{order}', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
+    
+    // My Tickets
+    Route::get('/my-tickets', [MyTicketController::class, 'index'])->name('my-tickets.index');
+    Route::get('/my-tickets/{order}', [MyTicketController::class, 'show'])->name('my-tickets.show');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -157,6 +180,14 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
     // ===== TICKET TYPE CRUD =====
     Route::resource('ticket-types', TicketTypeController::class);
+
+    // ===== USER MANAGEMENT (Admin only) =====
+    Route::resource('users', UserController::class)->except(['edit', 'update', 'show']);
+});
+
+// User Profile - accessible by authenticated users
+Route::middleware(['auth'])->group(function () {
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
 });
 
 /*
@@ -169,3 +200,45 @@ Route::get('/auth/google/callback', [SocialAuthController::class, 'callbackGoogl
 
 Route::get('/auth/github', [SocialAuthController::class, 'redirectGithub']);
 Route::get('/auth/github/callback', [SocialAuthController::class, 'callbackGithub']);
+
+// Route untuk Admin (Dashboard)
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/api/admin/search', [SearchDashboardController::class, 'index'])->name('admin.search.api');
+});
+
+// Route untuk Publik (Landing Page)
+Route::get('/api/search', [SearchLandingController::class, 'index'])->name('landing.search.api');
+
+// ===== GOOGLE CALENDAR INTEGRATION =====
+Route::middleware(['auth'])->group(function () {
+    // Google Calendar OAuth
+    Route::get('/auth/google-calendar', [GoogleCalendarController::class, 'redirectToGoogle'])
+        ->name('google-calendar.auth');
+    Route::get('/auth/google-calendar/callback', [GoogleCalendarController::class, 'handleGoogleCallback'])
+        ->name('google-calendar.callback');
+    
+    // Add event to calendar
+    Route::post('/calendar/add-event', [GoogleCalendarController::class, 'addEventToCalendar'])
+        ->name('calendar.add-event');
+    
+    // Disconnect
+    Route::post('/calendar/disconnect', [GoogleCalendarController::class, 'disconnect'])
+        ->name('calendar.disconnect');
+});
+
+
+// ===== PAYMENT ROUTES =====
+
+Route::middleware(['auth'])->group(function () {
+    // Payment routes
+    Route::get('/payment/{order}', [PaymentController::class, 'createPayment'])
+        ->name('payment.create');
+    Route::get('/payment/finish', [PaymentController::class, 'finish'])
+        ->name('payment.finish');
+    Route::post('/payment/check-status/{order}', [PaymentController::class, 'checkStatus'])
+        ->name('payment.check-status');
+});
+
+// Webhook untuk Midtrans notification (TANPA AUTH!)
+Route::post('/payment/notification', [PaymentController::class, 'notification'])
+    ->name('payment.notification');

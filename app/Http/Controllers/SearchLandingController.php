@@ -10,29 +10,41 @@ class SearchLandingController extends Controller
 {
     public function index(Request $request)
     {
-        // STEP 4: ambil keyword dari URL ?q=
-        $q = $request->query('q');
+        $query = $request->query('q');
 
-        // Kalau belum ngetik apa-apa
-        if (!$q) {
-            return response()->json([
-                'events' => [],
-                'artists' => []
-            ]);
+        if (!$query) {
+            return response()->json([]);
         }
 
-        // STEP 5 + 6: query + optimasi
-        return response()->json([
-            'events' => Event::select('id', 'title', 'event_date', 'location')
-                ->where('title', 'like', "%{$q}%")
-                ->limit(5)
-                ->get(),
+        $results = collect();
 
-            'artists' => Artist::select('id', 'name', 'genre')
-                ->where('name', 'like', "%{$q}%")
-                ->orWhere('genre', 'like', "%{$q}%")
-                ->limit(5)
-                ->get(),
-        ]);
+        // Cari Event Aktif
+        $events = Event::where('title', 'like', "%{$query}%")
+            ->where('status', 'active') // Asumsi ada kolom status
+            ->limit(4)->get()->map(function($event) {
+                return [
+                    'id' => 'landing-ev-' . $event->id,
+                    'title' => $event->title,
+                    'category' => 'Upcoming Event',
+                    'url' => url('/events/' . $event->slug), // Route detail event publik
+                    'image' => asset('storage/' . $event->image)
+                ];
+            });
+
+        // Cari Artist / Guest Star
+        $artists = Artist::where('name', 'like', "%{$query}%")
+            ->limit(4)->get()->map(function($artist) {
+                return [
+                    'id' => 'landing-art-' . $artist->id,
+                    'title' => $artist->name,
+                    'category' => 'Guest Star',
+                    'url' => url('/artists/' . $artist->slug),
+                    'image' => asset('storage/' . $artist->photo)
+                ];
+            });
+
+        $final = $results->concat($events)->concat($artists);
+
+        return response()->json($final);
     }
 }

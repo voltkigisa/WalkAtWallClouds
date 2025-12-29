@@ -20,6 +20,7 @@
                             <th class="p-5">Price</th>
                             <th class="p-5 text-center">Quota</th>
                             <th class="p-5 text-center">Sold</th>
+                            <th class="p-5 text-center">Available</th>
                             <th class="p-5 text-right">Actions</th>
                         </tr>
                     </thead>
@@ -31,18 +32,23 @@
                             <td class="p-5 text-sm font-medium text-indigo-300">Rp {{ number_format($ticketType->price, 0, ',', '.') }}</td>
                             <td class="p-5 text-center text-sm font-bold">{{ $ticketType->quota }}</td>
                             <td class="p-5 text-center text-sm font-bold text-red-400">{{ $ticketType->sold }}</td>
-                            <td class="p-5 text-right space-x-2">
-                                <a href="{{ route('ticket-types.show', $ticketType->id) }}" class="text-[10px] font-black uppercase text-gray-400 hover:text-white transition">View</a>
-                                <a href="{{ route('ticket-types.edit', $ticketType->id) }}" class="text-[10px] font-black uppercase text-indigo-400 hover:text-indigo-300 transition">Edit</a>
-                                <form action="{{ route('ticket-types.destroy', $ticketType->id) }}" method="POST" class="inline">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Yakin hapus?')" class="text-[10px] font-black uppercase text-red-500/50 hover:text-red-500 transition">Del</button>
-                                </form>
+                            <td class="p-5 text-center text-sm font-bold {{ ($ticketType->quota - $ticketType->sold) > 0 ? 'text-green-400' : 'text-red-400' }}">
+                                {{ $ticketType->quota - $ticketType->sold }}
+                            </td>
+                            <td class="p-5">
+                                <div class="flex justify-end gap-3">
+                                    <a href="{{ route('ticket-types.show', $ticketType->id) }}" class="px-3 py-1.5 bg-gray-800/50 hover:bg-gray-700 text-[10px] font-black uppercase text-gray-400 hover:text-white transition rounded-lg">View</a>
+                                    <a href="{{ route('ticket-types.edit', $ticketType->id) }}" class="px-3 py-1.5 bg-indigo-600/20 hover:bg-indigo-600/30 text-[10px] font-black uppercase text-indigo-400 hover:text-indigo-300 transition rounded-lg">Edit</a>
+                                    <form action="{{ route('ticket-types.destroy', $ticketType->id) }}" method="POST" class="inline">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Yakin hapus?')" class="px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-[10px] font-black uppercase text-red-500/70 hover:text-red-500 transition rounded-lg">Del</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="p-10 text-center text-gray-500 uppercase font-bold text-xs italic tracking-widest">No ticket data found.</td>
+                            <td colspan="7" class="p-10 text-center text-gray-500 uppercase font-bold text-xs italic tracking-widest">No ticket data found.</td>
                         </tr>
                         @endforelse
                     </tbody>

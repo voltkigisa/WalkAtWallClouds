@@ -18,120 +18,57 @@
 
     @stack('styles')
 </head>
-<body x-data="searchHandler()" 
-      @keydown.escape.window="showSearch = false"
-      @keydown.window.ctrl.k.prevent="showSearch = true"
-      class="bg-gray-900 min-h-screen text-gray-100 flex flex-col">
+<body class="bg-gray-900 min-h-screen text-gray-100 flex flex-col">
 
-    {{-- MODAL SEARCH --}}
-    <div x-show="showSearch" 
-         x-trap.noscroll="showSearch"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 backdrop-blur-0"
-         x-transition:enter-end="opacity-100 backdrop-blur-sm"
-         x-transition:leave="transition ease-in duration-200"
-         class="fixed inset-0 z-[60] bg-black/80 flex justify-center pt-20 px-4"
-         style="display: none;">
-        
-        <div @click.away="showSearch = false" 
-             class="w-full max-w-2xl bg-gray-900 rounded-3xl border border-white/10 shadow-[0_0_50px_-12px_rgba(79,70,229,0.5)] overflow-hidden h-fit">
-            
-            <div class="p-6 border-b border-white/5 flex items-center gap-4 bg-black/20">
-                <template x-if="!isLoading">
-                    <i class="fa-solid fa-magnifying-glass text-indigo-500 text-xl"></i>
-                </template>
-                <template x-if="isLoading">
-                    <i class="fa-solid fa-circle-notch fa-spin text-indigo-500 text-xl"></i>
-                </template>
+    {{-- Modal Search telah dihapus dari sini --}}
 
-                <input type="text" 
-                       x-model.debounce.500ms="search"
-                       @input="fetchResults"
-                       placeholder="Cari Guest Star, Tiket, atau Event..." 
-                       class="bg-transparent w-full border-none focus:ring-0 text-lg text-white placeholder-gray-600 outline-none"
-                       autofocus>
-                
-                <div class="flex items-center gap-2">
-                    <span class="text-[10px] text-gray-600 font-bold border border-white/10 px-2 py-1 rounded-md uppercase">Ctrl + K</span>
-                    <button @click="showSearch = false" class="text-gray-500 hover:text-white transition">
-                        <i class="fa-solid fa-xmark text-xl"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="max-h-[400px] overflow-y-auto p-4 bg-gray-900/50">
-                <div x-show="search.length === 0" class="text-center py-12">
-                    <div class="w-16 h-16 bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/5">
-                        <i class="fa-solid fa-keyboard text-gray-600 text-2xl"></i>
-                    </div>
-                    <p class="text-gray-400 font-bold uppercase tracking-widest text-xs">Mulai mengetik untuk mencari...</p>
-                </div>
-
-                <div x-show="isLoading" class="space-y-3 p-2">
-                    <div class="h-16 bg-white/5 animate-pulse rounded-2xl w-full"></div>
-                    <div class="h-16 bg-white/5 animate-pulse rounded-2xl w-full"></div>
-                </div>
-
-                <div x-show="!isLoading && results.length > 0">
-                    <p class="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em] mb-4 px-2">
-                        Search Results (<span x-text="results.length"></span>)
-                    </p>
-                    <div class="space-y-2">
-                        <template x-for="item in results" :key="item.id">
-                            <a :href="item.url" class="flex items-center gap-4 p-3 rounded-2xl hover:bg-indigo-600/10 border border-transparent hover:border-indigo-500/30 transition group">
-                                <div class="w-12 h-12 bg-gray-800 rounded-xl flex-shrink-0 flex items-center justify-center border border-white/5 overflow-hidden">
-                                    <template x-if="item.image">
-                                        <img :src="item.image" class="w-full h-full object-cover">
-                                    </template>
-                                    <template x-if="!item.image">
-                                        <i class="fa-solid fa-star text-indigo-500"></i>
-                                    </template>
-                                </div>
-                                <div class="flex-1">
-                                    <h4 class="font-black text-white group-hover:text-indigo-400 transition italic uppercase" x-text="item.title"></h4>
-                                    <p class="text-[10px] text-gray-500 font-bold uppercase tracking-tight" x-text="item.category"></p>
-                                </div>
-                                <i class="fa-solid fa-chevron-right text-gray-700 group-hover:text-indigo-500 pr-2 transition"></i>
-                            </a>
-                        </template>
-                    </div>
-                </div>
-
-                <div x-show="!isLoading && search.length > 0 && results.length === 0" class="text-center py-12">
-                    <div class="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-500/20">
-                        <i class="fa-solid fa-face-frown text-red-500 text-2xl"></i>
-                    </div>
-                    <p class="text-gray-400 font-bold text-xs">Tidak menemukan hasil untuk "<span x-text="search" class="text-white"></span>"</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- NAVBAR --}}
     <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/5">
         <div class="w-full px-4 sm:px-6 lg:px-8">
             <div class="relative flex h-20 items-center justify-between">
+                
                 <div class="flex items-center">
+                    <div class="flex items-center md:hidden mr-4">
+                        <button id="menu-btn" type="button" class="text-gray-400 hover:text-white focus:outline-none transition">
+                            <svg id="menu-icon" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            </svg>
+                        </button>
+                    </div>
+
                     <a href="/" class="text-xl font-black tracking-tighter uppercase italic text-indigo-500">
                         WalkAtWall <span class="text-white">Clouds</span>
                     </a>
+                    
                     <div class="hidden md:ml-12 md:block">
                         <div class="flex space-x-8">
-                            <a href="#home" class="text-sm font-bold text-gray-400 hover:text-indigo-400 transition uppercase tracking-widest">Home</a>
-                            <a href="#guest-star" class="text-sm font-bold text-gray-400 hover:text-indigo-400 transition uppercase tracking-widest">Guest Star</a>
-                            <a href="#ticket" class="text-sm font-bold text-gray-400 hover:text-indigo-400 transition uppercase tracking-widest">Ticket</a>
+                            <a href="/" class="text-sm font-bold text-gray-400 hover:text-indigo-400 transition uppercase tracking-widest">Home</a>
+                            <a href="/#guest-star" class="text-sm font-bold text-gray-400 hover:text-indigo-400 transition uppercase tracking-widest">Guest Star</a>
+                            <a href="/#ticket" class="text-sm font-bold text-gray-400 hover:text-indigo-400 transition uppercase tracking-widest">Ticket</a>
                         </div>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-x-6">
-                    <button @click="showSearch = true" class="group flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-2 rounded-xl hover:bg-white/10 transition">
-                        <i class="fa-solid fa-magnifying-glass text-gray-400 group-hover:text-indigo-500 transition"></i>
-                        <span class="text-xs font-bold text-gray-500 hidden sm:block">Search...</span>
-                        <span class="hidden lg:block bg-gray-800 px-1.5 py-0.5 rounded text-[10px] text-gray-400 border border-white/5">Ctrl K</span>
-                    </button>
+                    {{-- Tombol Search dihapus agar tidak memicu error Alpine --}}
 
                     <div class="flex items-center gap-4">
+                        <a href="{{ route('cart.index') }}" class="relative group p-2.5 bg-white/5 border border-white/10 rounded-xl hover:bg-indigo-600/20 hover:border-indigo-500/50 transition">
+                            <i class="fa-solid fa-cart-shopping text-gray-400 group-hover:text-indigo-400 transition text-sm"></i>
+                            @php
+                                $cart = session()->get('cart', []);
+                                $cartCount = array_sum(array_column($cart, 'quantity'));
+                            @endphp
+                            @if($cartCount > 0)
+                            <span class="absolute -top-1.5 -right-1.5 bg-indigo-600 text-[9px] font-black w-5 h-5 flex items-center justify-center rounded-full border border-gray-900 shadow-lg group-hover:scale-110 transition">
+                                {{ $cartCount }}
+                            </span>
+                            @else
+                            <span class="absolute -top-1.5 -right-1.5 bg-gray-700 text-[9px] font-black w-5 h-5 flex items-center justify-center rounded-full border border-gray-900 shadow-lg">
+                                0
+                            </span>
+                            @endif
+                        </a>
+
                         @guest
                             <a href="{{ route('login') }}" class="text-sm font-black uppercase tracking-widest hover:text-indigo-500 transition">Login</a>
                         @else
@@ -144,7 +81,7 @@
                             
                             <div x-data="{ open: false }" class="relative">
                                 <button @click="open = !open" class="flex items-center gap-3 bg-white/5 border border-white/10 p-1.5 rounded-2xl hover:bg-white/10 transition outline-none">
-                                    <div class="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-xs">
+                                    <div class="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-xs text-white">
                                         {{ substr(auth()->user()->name, 0, 1) }}
                                     </div>
                                     <span class="text-xs font-bold mr-1 hidden sm:inline">{{ auth()->user()->name }}</span>
@@ -167,6 +104,16 @@
                                         <p class="text-[10px] text-gray-500">{{ auth()->user()->email }}</p>
                                     </div>
                                     
+                                    <a href="{{ route('users.show', auth()->id()) }}" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-indigo-400 hover:bg-indigo-500/10 transition group text-left">
+                                        <i class="fa-solid fa-user group-hover:scale-110 transition"></i>
+                                        MY PROFILE
+                                    </a>
+                                    
+                                    <a href="{{ route('my-tickets.index') }}" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-green-400 hover:bg-green-500/10 transition group text-left">
+                                        <i class="fa-solid fa-ticket group-hover:scale-110 transition"></i>
+                                        MY TICKETS
+                                    </a>
+                                    
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
                                         <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-red-400 hover:bg-red-500/10 transition group text-left">
@@ -180,6 +127,12 @@
                     </div>
                 </div> 
             </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-black/95 border-t border-white/5 px-4 py-6 space-y-4 shadow-2xl">
+            <a href="#home" class="block text-sm font-bold text-gray-400 hover:text-indigo-400 uppercase tracking-widest transition">Home</a>
+            <a href="#guest-star" class="block text-sm font-bold text-gray-400 hover:text-indigo-400 uppercase tracking-widest transition">Guest Star</a>
+            <a href="#ticket" class="block text-sm font-bold text-gray-400 hover:text-indigo-400 uppercase tracking-widest transition">Ticket</a>
         </div>
     </nav>
 
@@ -225,6 +178,7 @@
             </p>
         </div>
     </footer>
+
     @stack('scripts')
 </body>
 </html>
