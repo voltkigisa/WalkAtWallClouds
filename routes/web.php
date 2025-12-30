@@ -5,7 +5,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 
-use App\Http\Controllers\SearchLandingController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AdminController;
@@ -64,13 +63,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-tickets', [MyTicketController::class, 'index'])->name('my-tickets.index');
     Route::get('/my-tickets/{order}', [MyTicketController::class, 'show'])->name('my-tickets.show');
 });
-
-/*
-|--------------------------------------------------------------------------
-| Search Landing Page
-|--------------------------------------------------------------------------
-*/
-Route::get('/search', [SearchLandingController::class, 'index']);
 
 /*
 |--------------------------------------------------------------------------
@@ -200,14 +192,6 @@ Route::get('/auth/google/callback', [SocialAuthController::class, 'callbackGoogl
 
 Route::get('/auth/github', [SocialAuthController::class, 'redirectGithub']);
 Route::get('/auth/github/callback', [SocialAuthController::class, 'callbackGithub']);
-
-// Route untuk Admin (Dashboard)
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/api/admin/search', [SearchDashboardController::class, 'index'])->name('admin.search.api');
-});
-
-// Route untuk Publik (Landing Page)
-Route::get('/api/search', [SearchLandingController::class, 'index'])->name('landing.search.api');
 
 // ===== GOOGLE CALENDAR INTEGRATION =====
 Route::middleware(['auth'])->group(function () {
