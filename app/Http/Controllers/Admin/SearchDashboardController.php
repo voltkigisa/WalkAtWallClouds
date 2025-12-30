@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 use App\Models\User;
 use App\Models\Ticket;
 use App\Models\Payment;
-use App\Models\Event;
 use App\Models\Artist;
+use App\Models\OrderItem;
 
 class SearchDashboardController extends Controller
 {
@@ -16,52 +17,52 @@ class SearchDashboardController extends Controller
     {
         $query = $request->query('q');
 
-        if (!$query || strlen($query) < 2) {
-            return response()->json([]);
+        if (!$query) {
+            return response()->json([
+                'users' => [],
+                'tickets' => [],
+                'payments' => [],
+                'artists' => [],
+                'order_items' => [],
+            ]);
         }
 
-        $results = collect();
+        return response()->json([
+            // ================= USER =================
+            'users' => User::where('name', 'like', "%{$query}%")
+                ->orWhere('email', 'like', "%{$query}%")
+                ->limit(5)
+                ->get(),
 
-        // Cari User / Pelanggan
-        $users = User::where('name', 'like', "%{$query}%")
-            ->orWhere('email', 'like', "%{$query}%")
-            ->limit(5)->get()->map(function($user) {
-                return [
-                    'id' => 'u-' . $user->id,
-                    'title' => $user->name,
-                    'category' => 'User Admin / Customer',
-                    'url' => '#', // Sesuaikan jika ada route detail user
-                    'image' => null
-                ];
-            });
+            // ================= TICKET =================
+            'tickets' => Ticket::where('title', 'like', "%{$query}%")
+                ->orWhere('code', 'like', "%{$query}%")
+                ->limit(5)
+                ->get(),
 
-        // Cari Event (Internal)
-        $events = Event::where('title', 'like', "%{$query}%")
-            ->limit(5)->get()->map(function($event) {
-                return [
-                    'id' => 'ev-' . $event->id,
-                    'title' => $event->title,
-                    'category' => 'Event Management',
-                    'url' => route('events.index'),
-                    'image' => $event->image ? asset('storage/' . $event->image) : null
-                ];
-            });
+            // ================= PAYMENT =================
+            'payments' => Payment::where('invoice', 'like', "%{$query}%")
+                ->orWhere('status', 'like', "%{$query}%")
+                ->limit(5)
+                ->get(),
 
-        // Cari Tiket berdasarkan Kode atau Judul
-        $tickets = Ticket::where('title', 'like', "%{$query}%")
-            ->limit(5)->get()->map(function($ticket) {
-                return [
-                    'id' => 't-' . $ticket->id,
-                    'title' => $ticket->title,
-                    'category' => 'Ticket Type',
-                    'url' => route('ticket-types.index'),
-                    'image' => null
-                ];
-            });
+            // ================= ARTIST =================
+            'artists' => Artist::where('name', 'like', "%{$query}%")
+                ->orWhere('country', 'like', "%{$query}%")
+                ->orWhere('genre', 'like', "%{$query}%")
+                ->limit(5)
+                ->get(),
 
-        // Gabungkan dan kirim sebagai satu array
-        $final = $results->concat($users)->concat($events)->concat($tickets);
-
-        return response()->json($final);
+            // ================= ORDER ITEM =================
+            'order_items' => OrderItem::whereHas('order', function ($q) use ($query) {
+                    $q->where('invoice', 'like', "%{$query}%");
+                })
+                ->orWhereHas('ticketType', function ($q) use ($query) {
+                    $q->where('name', 'like', "%{$query}%");
+                })
+                ->with(['order', 'ticketType'])
+                ->limit(5)
+                ->get(),
+        ]);
     }
 }
