@@ -36,8 +36,8 @@
                             <p class="text-xs font-bold uppercase">{{ $orderItem->order->user->name ?? '-' }}</p>
                         </div>
                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 text-right">
-                            <h3 class="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-1">Order ID Reference</h3>
-                            <p class="text-xs font-black text-indigo-400">ORD-{{ $orderItem->order_id }}</p>
+                            <h3 class="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-1">Order Code</h3>
+                            <p class="text-xs font-black text-indigo-400">{{ $orderItem->order->order_code ?? 'N/A' }}</p>
                         </div>
                     </div>
 

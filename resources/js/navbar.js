@@ -3,23 +3,57 @@
 // 1. Logic untuk Search (Alpine.js)
 // Menggunakan alpine:init agar Alpine pasti mengenali fungsi ini sebelum merender HTML
 document.addEventListener('alpine:init', () => {
+    console.log('Alpine.js initialized - searchHandler registered');
+    
     window.searchHandler = function() {
+        console.log('searchHandler function called');
         return {
             showSearch: false,
             search: '',
             isLoading: false,
             results: [],
             
+            init() {
+                console.log('searchHandler component initialized');
+            },
+            
             async fetchResults() {
-                if (this.search.length < 2) {
+                console.log('fetchResults called, search term:', this.search);
+                
+                if (this.search.length < 1) {
                     this.results = [];
                     return;
                 }
                 this.isLoading = true;
                 try {
-                    const response = await fetch(`/api/search?q=${encodeURIComponent(this.search)}`);
-                    if (!response.ok) throw new Error('Network response was not ok');
+                    // Check if we're in admin or public page
+                    const isAdmin = window.location.pathname.includes('/admin') || 
+                                    document.querySelector('[data-admin-search]');
+                    
+                    // Admin uses /admin/search, no public search anymore
+                    if (!isAdmin) {
+                        console.log('Not in admin page, search disabled');
+                        this.results = [];
+                        this.isLoading = false;
+                        return;
+                    }
+                    
+                    const apiUrl = `/admin/search?q=${encodeURIComponent(this.search)}`;
+                    
+                    console.log('Search URL:', apiUrl);
+                    console.log('Is Admin:', isAdmin);
+                    
+                    const response = await fetch(apiUrl);
+                    console.log('Response status:', response.status);
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error('Response error:', errorText);
+                        throw new Error('Network response was not ok');
+                    }
+                    
                     const data = await response.json();
+                    console.log('Search results:', data);
                     this.results = data; 
                 } catch (error) {
                     console.error('Search error:', error);

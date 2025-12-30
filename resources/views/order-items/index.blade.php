@@ -2,15 +2,10 @@
     <main class="fixed inset-0 bg-gray-900 flex items-center justify-center ml-64 text-white p-6">
         <div class="max-w-5xl w-full">
             
-            {{-- Header & Tombol Tambah --}}
-            <div class="flex justify-between items-end mb-6">
-                <div>
-                    <h1 class="text-3xl font-black uppercase tracking-tighter italic">Order <span class="text-indigo-500">Log</span></h1>
-                    <p class="text-gray-500 text-[10px] uppercase tracking-[0.2em] font-bold">Transaction History Records</p>
-                </div>
-                <a href="{{ route('order-items.create') }}" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-[10px] font-black uppercase tracking-widest transition shadow-lg shadow-indigo-500/20">
-                    + Tambah Order Baru
-                </a>
+            {{-- Header --}}
+            <div class="mb-6">
+                <h1 class="text-3xl font-black uppercase tracking-tighter italic">Order <span class="text-indigo-500">Log</span></h1>
+                <p class="text-gray-500 text-[10px] uppercase tracking-[0.2em] font-bold">Transaction History Records</p>
             </div>
 
             @if(session('success'))
@@ -38,7 +33,7 @@
                                 <tr class="hover:bg-white/[0.02] transition group">
                                     <td class="p-4">
                                         <div class="text-[10px] text-gray-500 font-bold">#{{ $orderItem->id }}</div>
-                                        <div class="text-xs font-black text-indigo-300 italic">ORD-{{ $orderItem->order_id }}</div>
+                                        <div class="text-xs font-black text-indigo-300 italic">{{ $orderItem->order->order_code ?? 'N/A' }}</div>
                                     </td>
                                     <td class="p-4">
                                         <div class="text-xs font-bold uppercase">{{ $orderItem->order->user->name ?? '-' }}</div>

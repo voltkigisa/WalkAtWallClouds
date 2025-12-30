@@ -5,11 +5,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 
-use App\Http\Controllers\SearchLandingController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArtistController;
+use App\Http\Controllers\GuestRedirectController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
@@ -41,6 +41,10 @@ Route::get('/', function () {
     return view('home', compact('artists', 'event', 'ticketTypes'));
 });
 
+// ===== ARTIST LINE-UP =====
+Route::get('/artist/{artist}', [ArtistController::class, 'showPublic'])->name('artist.show');
+Route::get('/guest/artist/{artist}', [GuestRedirectController::class, 'redirectToArtist'])->name('guest.artist');
+
 // ===== TICKET PURCHASE =====
 Route::get('/ticket', [CheckoutController::class, 'index'])->name('purchase.index');
 Route::get('/ticket/{ticketType}', [CheckoutController::class, 'show'])->name('purchase.show');
@@ -64,13 +68,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-tickets', [MyTicketController::class, 'index'])->name('my-tickets.index');
     Route::get('/my-tickets/{order}', [MyTicketController::class, 'show'])->name('my-tickets.show');
 });
-
-/*
-|--------------------------------------------------------------------------
-| Search Landing Page
-|--------------------------------------------------------------------------
-*/
-Route::get('/search', [SearchLandingController::class, 'index']);
 
 /*
 |--------------------------------------------------------------------------
@@ -200,14 +197,6 @@ Route::get('/auth/google/callback', [SocialAuthController::class, 'callbackGoogl
 
 Route::get('/auth/github', [SocialAuthController::class, 'redirectGithub']);
 Route::get('/auth/github/callback', [SocialAuthController::class, 'callbackGithub']);
-
-// Route untuk Admin (Dashboard)
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/api/admin/search', [SearchDashboardController::class, 'index'])->name('admin.search.api');
-});
-
-// Route untuk Publik (Landing Page)
-Route::get('/api/search', [SearchLandingController::class, 'index'])->name('landing.search.api');
 
 // ===== GOOGLE CALENDAR INTEGRATION =====
 Route::middleware(['auth'])->group(function () {
