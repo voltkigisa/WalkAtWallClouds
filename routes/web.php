@@ -24,8 +24,7 @@ use App\Http\Controllers\SocialAuthController;
 use App\Models\Artist;
 use App\Models\Event;
 use App\Http\Controllers\GoogleCalendarController;
-
-//  LIVE SEARCH DASHBOARD
+use App\Http\Controllers\DownloadPDFController;
 use App\Http\Controllers\Admin\SearchDashboardController;
 
 
@@ -150,6 +149,7 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
+    Route::get('/downloadpdf', [DownloadPDFController::class, 'downloadpdf'])->name('downloadpdf');
 
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin');
 
