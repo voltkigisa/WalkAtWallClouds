@@ -31,6 +31,23 @@
         </div>
     </div>
 
+    <div class="bg-black rounded-3xl border border-gray-800 shadow-2xl overflow-hidden mb-10">
+    <div class="p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div>
+            <h3 class="text-lg font-black uppercase tracking-tighter text-red-500">Laporan Ringkasan</h3>
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Cetak semua data ringkasan dashboard ke dalam format PDF</p>
+        </div>
+        <div>
+            <a href="{{ route('downloadpdf') }}" target="_blank" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition shadow-lg shadow-red-600/20 flex items-center gap-2">
+                <i class="fa-solid fa-file-pdf"></i> Download PDF
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="bg-black rounded-3xl border border-gray-800 shadow-2xl overflow-hidden">
+    </div>
+
     <div class="bg-black rounded-3xl border border-gray-800 shadow-2xl overflow-hidden">
         <div class="p-6 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
@@ -263,6 +280,8 @@
             </table>
         </div>
     </div>
+    
+    
 
     <div class="bg-black rounded-3xl border border-gray-800 shadow-2xl overflow-hidden mt-10">
         <div class="p-6 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -271,6 +290,7 @@
                 <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">View and manage all users</p>
             </div>
             <div class="flex gap-2">
+
                 <a href="{{ route('users.index') }}" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition">
                     View More
                 </a>
