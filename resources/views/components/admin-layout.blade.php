@@ -16,6 +16,7 @@
 
 <body class="bg-gray-900 text-white font-sans" 
       x-data="searchHandler()" 
+      data-admin-search
       @keydown.escape.window="showSearch = false"
       @keydown.window.ctrl.k.prevent="showSearch = true">
 
@@ -42,7 +43,7 @@
                 <input type="text" 
                        x-model.debounce.500ms="search"
                        @input="fetchResults"
-                       placeholder="Cari Data Admin (User, Event, Tiket)..." 
+                       placeholder="Cari berdasarkan ID, Nama, Email, dll..." 
                        class="bg-transparent w-full border-none focus:ring-0 text-lg text-white placeholder-gray-600 outline-none"
                        autofocus>
                 
@@ -59,7 +60,7 @@
                     <div class="w-16 h-16 bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/5">
                         <i class="fa-solid fa-keyboard text-gray-600 text-2xl"></i>
                     </div>
-                    <p class="text-gray-400 font-bold uppercase tracking-widest text-xs">Mulai mengetik untuk mencari data...</p>
+                    <p class="text-gray-400 font-bold uppercase tracking-widest text-xs">Ketik ID, nama, atau kata kunci...</p>
                 </div>
 
                 <div x-show="isLoading" class="space-y-3 p-2">
