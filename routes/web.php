@@ -9,6 +9,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArtistController;
+use App\Http\Controllers\GuestRedirectController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
@@ -39,6 +40,10 @@ Route::get('/', function () {
     $ticketTypes = $event ? $event->ticketTypes()->orderBy('price')->get() : collect();
     return view('home', compact('artists', 'event', 'ticketTypes'));
 });
+
+// ===== ARTIST LINE-UP =====
+Route::get('/artist/{artist}', [ArtistController::class, 'showPublic'])->name('artist.show');
+Route::get('/guest/artist/{artist}', [GuestRedirectController::class, 'redirectToArtist'])->name('guest.artist');
 
 // ===== TICKET PURCHASE =====
 Route::get('/ticket', [CheckoutController::class, 'index'])->name('purchase.index');
