@@ -38,12 +38,21 @@ document.addEventListener('alpine:init', () => {
                         return;
                     }
                     
-                    const apiUrl = `/admin/search?q=${encodeURIComponent(this.search)}`;
+                    // Use absolute URL with current origin for better compatibility
+                    const baseUrl = window.location.origin;
+                    const apiUrl = `${baseUrl}/admin/search?q=${encodeURIComponent(this.search)}`;
                     
                     console.log('Search URL:', apiUrl);
                     console.log('Is Admin:', isAdmin);
                     
-                    const response = await fetch(apiUrl);
+                    const response = await fetch(apiUrl, {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                        },
+                        credentials: 'same-origin' // Include cookies for session
+                    });
                     console.log('Response status:', response.status);
                     
                     if (!response.ok) {
