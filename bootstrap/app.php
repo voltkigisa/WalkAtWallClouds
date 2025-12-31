@@ -11,10 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Trust proxies only in production for hosting compatibility
-        if (app()->environment('production')) {
-            $middleware->trustProxies(at: '*');
-        }
+        // Leave empty for now - will be configured per environment
+        // Production proxy settings should be in .env: TRUST_PROXIES=*
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
