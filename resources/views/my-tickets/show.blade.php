@@ -17,15 +17,23 @@
                             <p class="text-xs text-gray-500 uppercase mb-1">Kode Order</p>
                             <p class="text-2xl font-black text-indigo-400">{{ $order->order_code }}</p>
                         </div>
-                        @if($order->payment && $order->payment->status === 'paid')
-                            <span class="px-4 py-2 bg-green-600/20 text-green-400 text-sm font-black rounded-full border border-green-600/30 uppercase">
-                                <i class="fa-solid fa-check-circle mr-1"></i>Dibayar
-                            </span>
-                        @else
-                            <span class="px-4 py-2 bg-yellow-600/20 text-yellow-400 text-sm font-black rounded-full border border-yellow-600/30 uppercase">
-                                <i class="fa-solid fa-clock mr-1"></i>Menunggu Pembayaran
-                            </span>
-                        @endif
+                        <div class="flex items-center gap-3">
+                            @if($order->payment && $order->payment->status === 'paid')
+                                <!-- Tombol Download PDF -->
+                                <a href="{{ route('my-tickets.download', $order->id) }}" 
+                                   target="_blank"
+                                   class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-black rounded-full transition uppercase inline-flex items-center">
+                                    <i class="fa-solid fa-download mr-2"></i>Download PDF
+                                </a>
+                                <span class="px-4 py-2 bg-green-600/20 text-green-400 text-sm font-black rounded-full border border-green-600/30 uppercase">
+                                    <i class="fa-solid fa-check-circle mr-1"></i>Dibayar
+                                </span>
+                            @else
+                                <span class="px-4 py-2 bg-yellow-600/20 text-yellow-400 text-sm font-black rounded-full border border-yellow-600/30 uppercase">
+                                    <i class="fa-solid fa-clock mr-1"></i>Menunggu Pembayaran
+                                </span>
+                            @endif
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 p-4 bg-gray-900/50 rounded-xl">
