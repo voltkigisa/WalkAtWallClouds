@@ -25,11 +25,10 @@ class SearchDashboardController extends Controller
         $results = [];
 
         // ================= USERS =================
-        $users = User::where('id', 'like', "%{$query}%")
-            ->orWhere('name', 'like', "%{$query}%")
-            ->orWhere('email', 'like', "%{$query}%")
-            ->orWhere('role', 'like', "%{$query}%")
-            ->limit(5)
+        // Optimized: removed % at beginning for better index usage
+        $users = User::where('name', 'like', "{$query}%")
+            ->orWhere('email', 'like', "{$query}%")
+            ->limit(3)
             ->get();
 
         foreach ($users as $user) {
@@ -43,12 +42,10 @@ class SearchDashboardController extends Controller
         }
 
         // ================= EVENTS =================
-        $events = Event::where('id', 'like', "%{$query}%")
-            ->orWhere('title', 'like', "%{$query}%")
-            ->orWhere('location', 'like', "%{$query}%")
-            ->orWhere('description', 'like', "%{$query}%")
-            ->orWhere('status', 'like', "%{$query}%")
-            ->limit(5)
+        // Optimized: only search in title and location for better performance
+        $events = Event::where('title', 'like', "{$query}%")
+            ->orWhere('location', 'like', "{$query}%")
+            ->limit(3)
             ->get();
 
         foreach ($events as $event) {
@@ -62,12 +59,10 @@ class SearchDashboardController extends Controller
         }
 
         // ================= ARTISTS =================
-        $artists = Artist::where('id', 'like', "%{$query}%")
-            ->orWhere('name', 'like', "%{$query}%")
-            ->orWhere('genre', 'like', "%{$query}%")
-            ->orWhere('country', 'like', "%{$query}%")
-            ->orWhere('bio', 'like', "%{$query}%")
-            ->limit(5)
+        // Optimized: only search in name and genre
+        $artists = Artist::where('name', 'like', "{$query}%")
+            ->orWhere('genre', 'like', "{$query}%")
+            ->limit(3)
             ->get();
 
         foreach ($artists as $artist) {
@@ -81,14 +76,10 @@ class SearchDashboardController extends Controller
         }
 
         // ================= TICKET TYPES =================
-        // Search in ticket name AND related event title
-        $ticketTypes = TicketType::where('id', 'like', "%{$query}%")
-            ->orWhere('name', 'like', "%{$query}%")
-            ->orWhereHas('event', function($q) use ($query) {
-                $q->where('title', 'like', "%{$query}%");
-            })
+        // Optimized: simplified search
+        $ticketTypes = TicketType::where('name', 'like', "{$query}%")
             ->with('event')
-            ->limit(5)
+            ->limit(3)
             ->get();
 
         foreach ($ticketTypes as $ticketType) {
@@ -102,16 +93,11 @@ class SearchDashboardController extends Controller
         }
 
         // ================= ORDERS =================
-        // Search in order_code, status, and user name
-        $orders = Order::where('id', 'like', "%{$query}%")
-            ->orWhere('order_code', 'like', "%{$query}%")
-            ->orWhere('status', 'like', "%{$query}%")
-            ->orWhereHas('user', function($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%")
-                  ->orWhere('email', 'like', "%{$query}%");
-            })
+        // Optimized: focus on order_code search
+        $orders = Order::where('order_code', 'like', "{$query}%")
+            ->orWhere('status', 'like', "{$query}%")
             ->with('user')
-            ->limit(5)
+            ->limit(3)
             ->get();
 
         foreach ($orders as $order) {
@@ -125,17 +111,8 @@ class SearchDashboardController extends Controller
         }
 
         // ================= ORDER ITEMS =================
-        // Search in order items by ticket type name or order code
-        $orderItems = OrderItem::where('id', 'like', "%{$query}%")
-            ->orWhereHas('ticketType', function($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%");
-            })
-            ->orWhereHas('order', function($q) use ($query) {
-                $q->where('order_code', 'like', "%{$query}%");
-            })
-            ->with(['order.user', 'ticketType'])
-            ->limit(5)
-            ->get();
+        // Optimized: removed to reduce query load, can search via Orders instead
+        // This prevents multiple joins that slow down the query
 
         foreach ($orderItems as $orderItem) {
             $results[] = [

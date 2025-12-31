@@ -11,6 +11,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\GuestRedirectController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventListController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\PaymentController;
@@ -43,6 +44,9 @@ Route::get('/', function () {
 // ===== ARTIST LINE-UP =====
 Route::get('/artist/{artist}', [ArtistController::class, 'showPublic'])->name('artist.show');
 Route::get('/guest/artist/{artist}', [GuestRedirectController::class, 'redirectToArtist'])->name('guest.artist');
+
+// ===== EVENT LIST WITH FILTER (Public) =====
+Route::get('/event-list', [EventListController::class, 'index'])->name('events.list');
 
 // ===== TICKET PURCHASE =====
 Route::get('/ticket', [CheckoutController::class, 'index'])->name('purchase.index');
@@ -139,8 +143,6 @@ Route::middleware('auth')->group(function () {
 
     // ===== CHECKOUT =====
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-    Route::get('/order/{order}/confirmation', [CheckoutController::class, 'confirmation'])
-        ->name('checkout.confirmation');
 });
 
 /*
