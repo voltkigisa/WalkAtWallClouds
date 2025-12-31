@@ -9,6 +9,6 @@ class GuestRedirectController extends Controller
 {
     public function redirectToArtist(Artist $artist): Response
     {
-        return response()->view('artists.lineup', compact('artist'));
+        return response()->view('artists.guestarartistlineup', compact('artist'));
     }
 }
