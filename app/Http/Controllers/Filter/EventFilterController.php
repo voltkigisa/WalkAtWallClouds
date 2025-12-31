@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Filter;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use Carbon\Carbon;
 
-class EventListController extends Controller
+class EventFilterController extends Controller
 {
     public function index(Request $request)
     {
@@ -76,6 +77,6 @@ class EventListController extends Controller
                          ->filter()
                          ->sort();
         
-        return view('events-list', compact('events', 'locations'));
+        return view('filters.events', compact('events', 'locations'));
     }
 }

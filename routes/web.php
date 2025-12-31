@@ -5,13 +5,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\GuestRedirectController;
 use App\Http\Controllers\EventController;
-use App\Http\Controllers\EventListController;
+use App\Http\Controllers\Filter\EventFilterController;
+use App\Http\Controllers\Filter\UserFilterController;
+use App\Http\Controllers\Filter\TicketTypeFilterController;
+use App\Http\Controllers\Filter\OrderFilterController;
+use App\Http\Controllers\Filter\ArtistFilterController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\PaymentController;
@@ -21,7 +25,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
-use App\Http\Controllers\SocialAuthController;
+use App\Http\Controllers\Auth\SocialAuthController;
 use App\Models\Artist;
 use App\Models\Event;
 use App\Http\Controllers\GoogleCalendarController;
@@ -49,8 +53,15 @@ Route::get('/artist/{artist}', [ArtistController::class, 'showPublic'])->name('a
 //landingpage 
 Route::get('/guest/artist/{artist}', [GuestRedirectController::class, 'redirectToArtist'])->name('guest.artist');
 
-// ===== EVENT LIST WITH FILTER (Public) =====
-Route::get('/event-list', [EventListController::class, 'index'])->name('events.list');
+// ===== FILTER ROUTES (Public & Admin) =====
+Route::get('/filters/events', [EventFilterController::class, 'index'])->name('filters.events');
+Route::get('/filters/users', [UserFilterController::class, 'index'])->name('filters.users')->middleware(AdminMiddleware::class);
+Route::get('/filters/ticket-types', [TicketTypeFilterController::class, 'index'])->name('filters.ticket-types')->middleware(AdminMiddleware::class);
+Route::get('/filters/orders', [OrderFilterController::class, 'index'])->name('filters.orders')->middleware(AdminMiddleware::class);
+Route::get('/filters/artists', [ArtistFilterController::class, 'index'])->name('filters.artists')->middleware(AdminMiddleware::class);
+
+// ===== EVENT LIST WITH FILTER (Public) - Backward compatibility =====
+Route::get('/event-list', [EventFilterController::class, 'index'])->name('events.list');
 
 // ===== TICKET PURCHASE =====
 Route::get('/ticket', [CheckoutController::class, 'index'])->name('purchase.index');
@@ -238,3 +249,7 @@ Route::middleware(['auth'])->group(function () {
 // Webhook untuk Midtrans notification (TANPA AUTH!)
 Route::post('/payment/notification', [PaymentController::class, 'notification'])
     ->name('payment.notification');
+
+   Route::get('/my-tickets/{id}/download', [TicketController::class, 'downloadPdf'])
+    ->name('my-tickets.download')
+    ->middleware('auth');
