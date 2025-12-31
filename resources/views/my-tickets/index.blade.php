@@ -79,11 +79,13 @@
                                 <a href="{{ route('my-tickets.show', $order->id) }}" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-center font-black rounded-xl transition uppercase">
                                     <i class="fa-solid fa-eye mr-2"></i>Lihat Detail
                                 </a>
-                                @if($order->payment && $order->payment->status === 'paid')
-                                    <button class="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-xl transition">
-                                        <i class="fa-solid fa-download mr-2"></i>Download Tiket
-                                    </button>
-                                @endif
+                               @if($order->payment && $order->payment->status === 'paid')
+                                         
+                                        <a href="{{ route('my-tickets.download', $order->id) }}" class="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-xl transition inline-flex items-center">
+                                            <i class="fa-solid fa-download mr-2"></i>Download Tiket
+                                        </a>
+
+                            @endif
                             </div>
                         </div>
                     </div>
