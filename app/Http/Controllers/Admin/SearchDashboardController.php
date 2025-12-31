@@ -114,16 +114,6 @@ class SearchDashboardController extends Controller
         // Optimized: removed to reduce query load, can search via Orders instead
         // This prevents multiple joins that slow down the query
 
-        foreach ($orderItems as $orderItem) {
-            $results[] = [
-                'id' => 'order-item-' . $orderItem->id,
-                'title' => ($orderItem->order->order_code ?? 'N/A'),
-                'category' => 'Order Item • ' . ($orderItem->ticketType->name ?? 'Unknown Ticket'),
-                'url' => route('order-items.show', $orderItem->id),
-                'image' => null,
-            ];
-        }
-
         return response()->json($results);
     }
 }
