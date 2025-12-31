@@ -2,29 +2,27 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>E-Ticket</title>
     <style>
-        /* Setup Halaman */
         @page { 
             margin: 0px; 
         }
         body { 
-            font-family: 'Helvetica', 'Arial', sans-serif; 
+            font-family: Arial, sans-serif; 
             margin: 0; 
             padding: 0; 
             background-color: #ffffff; 
-            color: #ffffff;
+            color: #000000;
         }
 
-        /* Container Tiket */
         .ticket-card {
             width: 550pt;
             height: 220pt;
             margin: 20pt auto;
             position: relative;
             background-color: #0f172a; 
-            border-radius: 12pt;
-            overflow: hidden;
-            border: 1px solid #1e293b;
+            border: 2px solid #1e293b;
         }
 
         .main-content {
@@ -32,8 +30,7 @@
             height: 220pt;
             float: left;
             padding: 22pt 25pt;
-            box-sizing: border-box;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            background-color: #0f172a;
         }
 
         .stub-content {
@@ -44,31 +41,27 @@
             border-left: 3px dashed #030712;
             text-align: center;
             padding: 20pt;
-            box-sizing: border-box;
         }
 
-        /* Tipografi */
         .badge {
             display: inline-block;
             padding: 3pt 8pt;
-            background: rgba(79, 70, 229, 0.2);
+            background-color: #4f46e5;
             border: 1px solid #6366f1;
             color: #a5b4fc;
             font-size: 7pt;
             font-weight: bold;
-            border-radius: 50pt;
             text-transform: uppercase;
             margin-bottom: 8pt;
         }
 
         .event-title {
             font-size: 20pt;
-            font-weight: 900;
+            font-weight: bold;
             margin: 2pt 0;
             color: #ffffff;
             text-transform: uppercase;
-            letter-spacing: -1pt;
-            line-height: 1.1;
+            line-height: 1.2;
         }
 
         .event-subtitle {
@@ -78,16 +71,14 @@
             margin-bottom: 12pt;
         }
 
-        /* Tabel Info */
         .info-grid {
             width: 100%;
             margin-top: 10pt;
         }
         .info-label {
-            font-size: 6pt;
+            font-size: 7pt;
             color: #94a3b8;
             text-transform: uppercase;
-            letter-spacing: 1pt;
         }
         .info-value {
             font-size: 10pt;
@@ -95,45 +86,41 @@
             color: #f1f5f9;
         }
 
-        /* Instruksi Tambahan */
         .entry-instruction {
             margin-top: 18pt;
             font-size: 7.5pt;
             color: #6366f1;
-            font-style: italic;
-            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            border-top: 1px solid #94a3b8;
             padding-top: 8pt;
         }
 
-        /* QR & Stub */
         .qr-box {
-            background: white;
+            background-color: #ffffff;
             width: 90pt;
             height: 90pt;
             margin: 12pt auto;
             padding: 6pt;
-            border-radius: 6pt;
+            border: 1px solid #cccccc;
         }
         .qr-inner {
-            border: 1px solid #eee;
+            border: 1px solid #eeeeee;
             width: 100%;
             height: 100%;
             line-height: 75pt;
-            color: #bbb;
+            color: #bbbbbb;
             font-size: 7pt;
+            text-align: center;
         }
 
-        /* Kode Order Diperkecil */
         .order-code {
             font-family: monospace;
-            font-size: 9pt; /* Ukuran lebih kecil sesuai request */
+            font-size: 9pt;
             color: #ffffff;
             font-weight: bold;
-            letter-spacing: 0.5pt;
-            background: rgba(0,0,0,0.2);
-            padding: 2pt 6pt;
-            border-radius: 4pt;
+            background-color: #000000;
+            padding: 4pt 8pt;
             display: inline-block;
+            margin-top: 10pt;
         }
 
         .gate-info {
@@ -144,20 +131,9 @@
             font-weight: bold;
         }
 
-        /* Lingkaran Dekorasi Potongan */
-        .cut-top, .cut-bottom {
-            position: absolute;
-            left: 371pt;
-            width: 18pt;
-            height: 18pt;
-            background-color: #ffffff; /* Sesuai background body */
-            border-radius: 50%;
-            z-index: 10;
+        .page-break { 
+            page-break-after: always; 
         }
-        .cut-top { top: -9pt; }
-        .cut-bottom { bottom: -9pt; }
-
-        .page-break { page-break-after: always; }
     </style>
 </head>
 <body>
@@ -165,9 +141,6 @@
 @foreach($order->items as $item)
     @for($i = 1; $i <= $item->quantity; $i++)
     <div class="ticket-card">
-        <div class="cut-top"></div>
-        <div class="cut-bottom"></div>
-
         <div class="main-content">
             <div class="badge">Official Admission</div>
             <div class="event-title">{{ $item->ticketType->event->title }}</div>
@@ -197,21 +170,18 @@
             </table>
 
             <div class="entry-instruction">
-                <i class="fa-solid fa-info-circle"></i> Tunjukkan e-tiket ini di pintu masuk untuk discan. Harap bawa kartu identitas yang berlaku.
+                ⓘ Tunjukkan e-tiket ini di pintu masuk untuk discan. Harap bawa kartu identitas yang berlaku.
             </div>
         </div>
 
         <div class="stub-content">
-            <div style="font-size: 7pt; color: #e0e7ff; font-weight: bold; letter-spacing: 1pt;">SCAN DISINI</div>
+            <div style="font-size: 7pt; color: #e0e7ff; font-weight: bold;">SCAN DISINI</div>
             <div class="qr-box">
                 <div class="qr-inner">
-                    <div style="padding: 2px;">
-                        <small style="color: #999; font-weight: bold;">QR CODE </small>
-                    </div>
+                    QR CODE
                 </div>
             </div>
             <div class="order-code">{{ $order->order_code }}</div>
-
         </div>
     </div>
     <div class="page-break"></div>

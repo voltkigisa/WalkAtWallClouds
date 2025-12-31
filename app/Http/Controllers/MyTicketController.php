@@ -45,6 +45,10 @@ class MyTicketController extends Controller
     public function downloadPdf($id)
     {
         try {
+            // Set memory limit untuk hosting
+            ini_set('memory_limit', '256M');
+            ini_set('max_execution_time', '120');
+            
             $order = Order::with(['items.ticketType.event', 'user', 'payment'])
                 ->where('id', $id)
                 ->where('user_id', Auth::id())
@@ -61,18 +65,31 @@ class MyTicketController extends Controller
                 'date'  => date('d/m/Y')
             ];
 
-            // Setup PDF dengan options untuk hosting
-            $pdf = Pdf::loadView('my-tickets.pdf', $data)
-                      ->setPaper('a4', 'portrait')
-                      ->setOption('isHtml5ParserEnabled', true)
-                      ->setOption('isRemoteEnabled', true);
+            // Setup PDF dengan options untuk hosting - lebih minimal
+            $pdf = Pdf::loadView('my-tickets.pdf', $data);
+            $pdf->setPaper('a4', 'portrait');
+            $pdf->setWarnings(false);
+            
+            // Set options yang kompatibel dengan hosting
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => false, // Lebih stabil untuk hosting
+                'isRemoteEnabled' => false,
+                'chroot' => realpath(base_path()),
+                'defaultFont' => 'sans-serif',
+                'dpi' => 96,
+                'defaultPaperSize' => 'a4'
+            ]);
 
             // Gunakan download() untuk lebih kompatibel dengan hosting
             return $pdf->download('Tiket_' . $order->order_code . '.pdf');
             
         } catch (\Exception $e) {
-            Log::error('PDF Download Error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Gagal mendownload tiket. Silakan coba lagi.');
+            Log::error('PDF Download Error: ' . $e->getMessage(), [
+                'order_id' => $id,
+                'user_id' => Auth::id(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()->with('error', 'Gagal mendownload tiket: ' . $e->getMessage());
         }
     }
 }
