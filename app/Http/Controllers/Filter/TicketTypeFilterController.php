@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Filter;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TicketType;
 use App\Models\Event;
