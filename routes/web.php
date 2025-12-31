@@ -249,7 +249,3 @@ Route::middleware(['auth'])->group(function () {
 // Webhook untuk Midtrans notification (TANPA AUTH!)
 Route::post('/payment/notification', [PaymentController::class, 'notification'])
     ->name('payment.notification');
-
-   Route::get('/my-tickets/{id}/download', [TicketController::class, 'downloadPdf'])
-    ->name('my-tickets.download')
-    ->middleware('auth');
