@@ -1,78 +1,110 @@
 // resources/js/navbar.js
 
-// 1. Logic untuk Search (Alpine.js)
-// Menggunakan alpine:init agar Alpine pasti mengenali fungsi ini sebelum merender HTML
-document.addEventListener('alpine:init', () => {
-    console.log('Alpine.js initialized - searchHandler registered');
-    
-    window.searchHandler = function() {
-        console.log('searchHandler function called');
-        return {
-            showSearch: false,
-            search: '',
-            isLoading: false,
-            results: [],
-            
-            init() {
-                console.log('searchHandler component initialized');
-            },
-            
-            async fetchResults() {
-                console.log('fetchResults called, search term:', this.search);
+// Global search handler function - defined immediately
+window.searchHandler = function() {
+    return {
+        showSearch: false,
+        search: '',
+        isLoading: false,
+        results: [],
+        
+        init() {
+            console.log('[Search] Component initialized');
+            // Log environment info for debugging
+            console.log('[Search] Current URL:', window.location.href);
+            console.log('[Search] Is Admin:', this.isAdminPage());
+        },
+        
+        isAdminPage() {
+            return window.location.pathname.includes('/admin') || 
+                   document.querySelector('[data-admin-search]') !== null;
+        },
+        
+        async fetchResults() {
+            console.log('[Search] Fetching results for:', this.search);
                 
-                if (this.search.length < 1) {
+            if (this.search.length < 1) {
+                this.results = [];
+                return;
+            }
+            
+            this.isLoading = true;
+            
+            try {
+                // Check if we're in admin page
+                if (!this.isAdminPage()) {
+                    console.warn('[Search] Not in admin page, search disabled');
                     this.results = [];
+                    this.isLoading = false;
                     return;
                 }
-                this.isLoading = true;
-                try {
-                    // Check if we're in admin or public page
-                    const isAdmin = window.location.pathname.includes('/admin') || 
-                                    document.querySelector('[data-admin-search]');
-                    
-                    // Admin uses /admin/search, no public search anymore
-                    if (!isAdmin) {
-                        console.log('Not in admin page, search disabled');
-                        this.results = [];
-                        this.isLoading = false;
-                        return;
-                    }
-                    
-                    // Use absolute URL with current origin for better compatibility
-                    const baseUrl = window.location.origin;
-                    const apiUrl = `${baseUrl}/admin/search?q=${encodeURIComponent(this.search)}`;
-                    
-                    console.log('Search URL:', apiUrl);
-                    console.log('Is Admin:', isAdmin);
-                    
-                    const response = await fetch(apiUrl, {
-                        method: 'GET',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'application/json',
-                        },
-                        credentials: 'same-origin' // Include cookies for session
-                    });
-                    console.log('Response status:', response.status);
-                    
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error('Response error:', errorText);
-                        throw new Error('Network response was not ok');
-                    }
-                    
-                    const data = await response.json();
-                    console.log('Search results:', data);
-                    this.results = data; 
-                } catch (error) {
-                    console.error('Search error:', error);
-                    this.results = [];
-                } finally {
-                    this.isLoading = false;
+                
+                // Build API URL
+                const baseUrl = window.location.origin;
+                const apiUrl = `${baseUrl}/admin/search?q=${encodeURIComponent(this.search)}`;
+                
+                console.log('[Search] API URL:', apiUrl);
+                
+                // Get CSRF token from meta tag or cookie
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ||
+                                document.querySelector('input[name="_token"]')?.value ||
+                                '';
+                
+                const headers = {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                };
+                
+                if (csrfToken) {
+                    headers['X-CSRF-TOKEN'] = csrfToken;
                 }
+                
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: headers,
+                    credentials: 'same-origin',
+                    cache: 'no-cache'
+                });
+                
+                console.log('[Search] Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('[Search] Error response:', errorText);
+                    
+                    if (response.status === 401 || response.status === 419) {
+                        console.error('[Search] Authentication error - session expired?');
+                    } else if (response.status === 500) {
+                        console.error('[Search] Server error - check Laravel logs');
+                    }
+                    
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('[Search] Results received:', data.length, 'items');
+                this.results = data; 
+            } catch (error) {
+                console.error('[Search] Error:', error);
+                console.error('[Search] Error details:', {
+                    message: error.message,
+                    stack: error.stack
+                });
+                this.results = [];
+            } finally {
+                this.isLoading = false;
             }
         }
-    }
+    };
+};
+
+// Log when script is loaded
+console.log('[Search] navbar.js loaded successfully');
+
+// Alpine.js event listener for debugging
+document.addEventListener('alpine:init', () => {
+    console.log('[Search] Alpine.js initialized');
 });
 
 // 2. Logic untuk Mobile Menu (Vanilla JS)
