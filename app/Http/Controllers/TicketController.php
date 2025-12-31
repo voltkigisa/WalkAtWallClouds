@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
+use App\Models\Order;
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
@@ -66,5 +70,29 @@ class TicketController extends Controller
     {
         $ticket->delete();
         return redirect()->route('tickets.index')->with('success', 'Ticket berhasil dihapus');
+    }
+
+
+    //download tiket pdf
+    public function downloadPdf($id)
+    {
+        
+        $order = Order::with(['items.ticketType.event', 'user', 'payment'])
+            ->where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        if (!$order->payment || $order->payment->status !== 'paid')
+
+        $data = [
+            'order' => $order,
+            'title' => 'E-Ticket ' . $order->order_code,
+            'date'  => date('d/m/Y')
+        ];
+
+        $pdf = Pdf::loadView('my-tickets.pdf', $data)
+                  ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('Tiket_' . $order->order_code . '.pdf');
     }
 }
