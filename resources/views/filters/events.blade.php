@@ -1,4 +1,4 @@
-<?php $title = 'Events - WalkAtWallClouds'; ?>
+<?php $title = 'Events Filter - WalkAtWallClouds'; ?>
 <x-layout :$title>
     <main class="container mx-auto px-4 py-10">
         <div class="mb-10">
@@ -13,7 +13,7 @@
                 <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Temukan event yang sesuai dengan preferensi Anda</p>
             </div>
             
-            <form method="GET" action="{{ route('events.list') }}" class="p-6">
+            <form method="GET" action="{{ route('filters.events') }}" class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Lokasi -->
                     <div>
@@ -90,7 +90,7 @@
                     <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition shadow-lg shadow-indigo-600/20 flex items-center gap-2">
                         <i class="fa-solid fa-filter"></i> Terapkan Filter
                     </button>
-                    <a href="{{ route('events.list') }}" class="bg-gray-800 hover:bg-gray-700 text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition flex items-center gap-2">
+                    <a href="{{ route('filters.events') }}" class="bg-gray-800 hover:bg-gray-700 text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition flex items-center gap-2">
                         <i class="fa-solid fa-rotate-right"></i> Reset Filter
                     </a>
                 </div>
