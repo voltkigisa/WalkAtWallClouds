@@ -117,7 +117,10 @@
                 <div class="flex flex-col lg:flex-row gap-12 items-start">
                     <div class="w-full lg:w-3/5 bg-black/40 p-4 rounded-3xl border border-white/5 shadow-2xl">
                         <div class="relative overflow-hidden rounded-2xl group">
-                            <img src="{{ asset('images/seat-map.jpg') }}" alt="Festival Seat Map" class="w-full h-auto object-cover group-hover:scale-105 transition duration-700">
+                            <img src="{{ asset('images/seat-map.jpg') }}" 
+                                 alt="Festival Seat Map" 
+                                 class="w-full h-auto object-cover group-hover:scale-105 transition duration-700"
+                                 onerror="this.onerror=null; this.src='{{ url('/images/seat-map.jpg') }}';">
                             
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
                                 <p class="text-xs text-gray-400 italic">*Peta ini hanya ilustrasi estimasi jarak panggung</p>
