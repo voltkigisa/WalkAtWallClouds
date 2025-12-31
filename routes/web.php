@@ -74,6 +74,7 @@ Route::middleware(['auth'])->group(function () {
     // My Tickets
     Route::get('/my-tickets', [MyTicketController::class, 'index'])->name('my-tickets.index');
     Route::get('/my-tickets/{order}', [MyTicketController::class, 'show'])->name('my-tickets.show');
+    Route::get('/my-tickets/{id}/download', [MyTicketController::class, 'downloadPdf'])->name('my-tickets.download');
 });
 
 /*
