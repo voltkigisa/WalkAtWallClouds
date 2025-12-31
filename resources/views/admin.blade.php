@@ -64,6 +64,52 @@
             </div>
         </div>
 
+        <!-- Filter Form -->
+        <div class="p-6 border-b border-gray-800">
+            <form method="GET" action="{{ route('admin') }}">
+                <table border="0" cellpadding="5">
+                    <tr>
+                        <td><label>Filter Status:</label></td>
+                        <td>
+                            <select name="status">
+                                <option value="">Semua Status</option>
+                                <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published</option>
+                                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label>Filter Tanggal Event:</label></td>
+                        <td>
+                            <select name="date_filter">
+                                <option value="">Semua Tanggal</option>
+                                <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Hari Ini</option>
+                                <option value="this_week" {{ request('date_filter') == 'this_week' ? 'selected' : '' }}>Minggu Ini</option>
+                                <option value="this_month" {{ request('date_filter') == 'this_month' ? 'selected' : '' }}>Bulan Ini</option>
+                                <option value="upcoming" {{ request('date_filter') == 'upcoming' ? 'selected' : '' }}>Event Mendatang</option>
+                                <option value="past" {{ request('date_filter') == 'past' ? 'selected' : '' }}>Event Lewat</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label>Tanggal Dari:</label></td>
+                        <td><input type="date" name="date_from" value="{{ request('date_from') }}"></td>
+                    </tr>
+                    <tr>
+                        <td><label>Tanggal Sampai:</label></td>
+                        <td><input type="date" name="date_to" value="{{ request('date_to') }}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="submit">Terapkan Filter</button>
+                            <a href="{{ route('admin') }}">Reset Filter</a>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>

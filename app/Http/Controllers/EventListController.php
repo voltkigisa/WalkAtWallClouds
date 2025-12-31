@@ -4,23 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
-use App\Models\Artist;
-use App\Models\Order;
-use App\Models\Ticket;
-use App\Models\TicketType;
-use App\Models\User;
 use Carbon\Carbon;
 
-class AdminController extends Controller
+class EventListController extends Controller
 {
     public function index(Request $request)
     {
-        // Query builder untuk events dengan filter
-        $eventsQuery = Event::withCount('artists');
+        // Query builder untuk events
+        $eventsQuery = Event::where('status', 'published')->with('artists');
         
-        // Filter berdasarkan status
-        if ($request->filled('status')) {
-            $eventsQuery->where('status', $request->status);
+        // Filter berdasarkan lokasi
+        if ($request->filled('location')) {
+            $eventsQuery->where('location', 'LIKE', '%' . $request->location . '%');
         }
         
         // Filter berdasarkan tanggal
@@ -54,20 +49,33 @@ class AdminController extends Controller
             $eventsQuery->where('event_date', '<=', $request->date_to);
         }
         
-        // Limit 5 for dashboard preview
-        $events = $eventsQuery->limit(5)->get();
-        $artists = Artist::withCount('events')->limit(5)->get();
-        $ticketTypes = TicketType::with('event')->limit(5)->get();
-        $users = User::withCount(['orders'])->limit(5)->get();
+        // Filter berdasarkan range harga
+        if ($request->filled('price_min') || $request->filled('price_max')) {
+            $eventsQuery->whereHas('ticketTypes', function($query) use ($request) {
+                if ($request->filled('price_min')) {
+                    $query->where('price', '>=', $request->price_min);
+                }
+                if ($request->filled('price_max')) {
+                    $query->where('price', '<=', $request->price_max);
+                }
+            });
+        }
         
-        // Total counts
-        $totalEvents = Event::count();
-        $totalArtists = Artist::count();
-        $totalOrders = Order::count();
-        $totalTickets = Ticket::count();
-        $totalTicketTypes = TicketType::count();
-        $totalUsers = User::count();
+        // Sorting
+        $sortBy = $request->get('sort_by', 'event_date');
+        $sortOrder = $request->get('sort_order', 'asc');
+        $eventsQuery->orderBy($sortBy, $sortOrder);
         
-        return view('admin', compact('events', 'artists', 'ticketTypes', 'users', 'totalEvents', 'totalArtists', 'totalOrders', 'totalTickets', 'totalTicketTypes', 'totalUsers'));
+        // Pagination
+        $events = $eventsQuery->paginate(12);
+        
+        // Get unique locations untuk dropdown filter
+        $locations = Event::where('status', 'published')
+                         ->distinct()
+                         ->pluck('location')
+                         ->filter()
+                         ->sort();
+        
+        return view('events-list', compact('events', 'locations'));
     }
 }
