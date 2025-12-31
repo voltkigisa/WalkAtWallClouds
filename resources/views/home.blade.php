@@ -75,19 +75,24 @@
                 </section>
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                    @foreach($artists as $artist)
-                    <div class="group cursor-pointer">
-                        <div class="relative overflow-hidden rounded-2xl bg-gray-800 aspect-[3/4] mb-4">
-                            <img src="{{ asset('storage/'.$artist->photo) }}" alt="{{ $artist->name }}" class="h-full w-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-500">
-                            <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded text-[10px] font-bold">
-                                {{ $artist->genre }}
-                            </div>
-                        </div>
-                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">{{ $artist->name }}</h3>
-                    </div>
-                    @endforeach
-                </div>
+    @foreach($artists as $artist)
+    <a href="{{ route('guest.artist', $artist->id) }}" class="group block">
+        <div class="relative overflow-hidden rounded-2xl bg-gray-800 aspect-[3/4] mb-4">
+            <img src="{{ asset('storage/'.$artist->photo) }}" 
+                 alt="{{ $artist->name }}" 
+                 class="h-full w-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-500">
+            
+            <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded text-[10px] font-bold">
+                {{ $artist->genre }}
             </div>
+        </div>
+        
+        <h3 class="text-sm font-bold text-white uppercase tracking-wider group-hover:text-indigo-400 transition-colors">
+            {{ $artist->name }}
+        </h3>
+    </a>
+    @endforeach
+</div>
         </section>
 
         <section id="ticket" class="py-20 bg-gray-900 scroll-mt-24">
