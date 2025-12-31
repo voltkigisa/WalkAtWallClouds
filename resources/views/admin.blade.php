@@ -67,46 +67,53 @@
         <!-- Filter Form -->
         <div class="p-6 border-b border-gray-800">
             <form method="GET" action="{{ route('admin') }}">
-                <table border="0" cellpadding="5">
-                    <tr>
-                        <td><label>Filter Status:</label></td>
-                        <td>
-                            <select name="status">
-                                <option value="">Semua Status</option>
-                                <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published</option>
-                                <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                                <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label>Filter Tanggal Event:</label></td>
-                        <td>
-                            <select name="date_filter">
-                                <option value="">Semua Tanggal</option>
-                                <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Hari Ini</option>
-                                <option value="this_week" {{ request('date_filter') == 'this_week' ? 'selected' : '' }}>Minggu Ini</option>
-                                <option value="this_month" {{ request('date_filter') == 'this_month' ? 'selected' : '' }}>Bulan Ini</option>
-                                <option value="upcoming" {{ request('date_filter') == 'upcoming' ? 'selected' : '' }}>Event Mendatang</option>
-                                <option value="past" {{ request('date_filter') == 'past' ? 'selected' : '' }}>Event Lewat</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label>Tanggal Dari:</label></td>
-                        <td><input type="date" name="date_from" value="{{ request('date_from') }}"></td>
-                    </tr>
-                    <tr>
-                        <td><label>Tanggal Sampai:</label></td>
-                        <td><input type="date" name="date_to" value="{{ request('date_to') }}"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <button type="submit">Terapkan Filter</button>
-                            <a href="{{ route('admin') }}">Reset Filter</a>
-                        </td>
-                    </tr>
-                </table>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Filter Status -->
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-widest text-gray-400 mb-2">Filter Status:</label>
+                        <select name="status" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                            <option value="">Semua Status</option>
+                            <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published</option>
+                            <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter Tanggal Event -->
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-widest text-gray-400 mb-2">Filter Tanggal Event:</label>
+                        <select name="date_filter" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                            <option value="">Semua Tanggal</option>
+                            <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Hari Ini</option>
+                            <option value="this_week" {{ request('date_filter') == 'this_week' ? 'selected' : '' }}>Minggu Ini</option>
+                            <option value="this_month" {{ request('date_filter') == 'this_month' ? 'selected' : '' }}>Bulan Ini</option>
+                            <option value="upcoming" {{ request('date_filter') == 'upcoming' ? 'selected' : '' }}>Event Mendatang</option>
+                            <option value="past" {{ request('date_filter') == 'past' ? 'selected' : '' }}>Event Lewat</option>
+                        </select>
+                    </div>
+
+                    <!-- Tanggal Dari -->
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-widest text-gray-400 mb-2">Tanggal Dari:</label>
+                        <input type="date" name="date_from" value="{{ request('date_from') }}" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                    </div>
+
+                    <!-- Tanggal Sampai -->
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-widest text-gray-400 mb-2">Tanggal Sampai:</label>
+                        <input type="date" name="date_to" value="{{ request('date_to') }}" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 mt-6">
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition shadow-lg shadow-indigo-600/20 flex items-center gap-2">
+                        <i class="fa-solid fa-filter"></i> Terapkan Filter
+                    </button>
+                    <a href="{{ route('admin') }}" class="bg-gray-800 hover:bg-gray-700 text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> Reset Filter
+                    </a>
+                </div>
             </form>
         </div>
 
