@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Admin' }} | WalkAtWallClouds</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -41,7 +42,7 @@
                 </template>
 
                 <input type="text" 
-                       x-model.debounce.500ms="search"
+                       x-model.debounce.300ms="search"
                        @input="fetchResults"
                        placeholder="Cari berdasarkan ID, Nama, Email, dll..." 
                        class="bg-transparent w-full border-none focus:ring-0 text-lg text-white placeholder-gray-600 outline-none"

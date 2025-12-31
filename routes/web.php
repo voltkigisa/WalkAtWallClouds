@@ -42,7 +42,11 @@ Route::get('/', function () {
 });
 
 // ===== ARTIST LINE-UP =====
+
+//admin
 Route::get('/artist/{artist}', [ArtistController::class, 'showPublic'])->name('artist.show');
+
+//landingpage 
 Route::get('/guest/artist/{artist}', [GuestRedirectController::class, 'redirectToArtist'])->name('guest.artist');
 
 // ===== EVENT LIST WITH FILTER (Public) =====
