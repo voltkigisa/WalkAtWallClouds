@@ -195,6 +195,40 @@
             </div>
         </div>
 
+        <!-- Artist Filter Form (Plain) -->
+        <div class="p-6 border-b border-gray-800">
+            <form method="GET" action="{{ route('admin') }}">
+                <!-- Preserve existing filters -->
+                @if(request('status'))
+                    <input type="hidden" name="status" value="{{ request('status') }}">
+                @endif
+                @if(request('date_filter'))
+                    <input type="hidden" name="date_filter" value="{{ request('date_filter') }}">
+                @endif
+                @if(request('date_from'))
+                    <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                @endif
+                @if(request('date_to'))
+                    <input type="hidden" name="date_to" value="{{ request('date_to') }}">
+                @endif
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-2">Nama Artist:</label>
+                        <input type="text" name="artist_name" value="{{ request('artist_name') }}" placeholder="Cari nama..." class="w-full bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-2">Genre:</label>
+                        <input type="text" name="artist_genre" value="{{ request('artist_genre') }}" placeholder="Cari genre..." class="w-full bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm text-white">
+                    </div>
+                    <div class="flex items-end">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded text-xs">Filter</button>
+                        <a href="{{ route('admin') }}" class="ml-2 bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded text-xs">Reset</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -269,6 +303,53 @@
                     + Add Ticket Type
                 </a>
             </div>
+        </div>
+
+        <!-- Ticket Type Filter Form (Plain) -->
+        <div class="p-6 border-b border-gray-800">
+            <form method="GET" action="{{ route('admin') }}">
+                <!-- Preserve existing filters -->
+                @if(request('status'))
+                    <input type="hidden" name="status" value="{{ request('status') }}">
+                @endif
+                @if(request('date_filter'))
+                    <input type="hidden" name="date_filter" value="{{ request('date_filter') }}">
+                @endif
+                @if(request('date_from'))
+                    <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                @endif
+                @if(request('date_to'))
+                    <input type="hidden" name="date_to" value="{{ request('date_to') }}">
+                @endif
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-2">Nama Ticket:</label>
+                        <input type="text" name="ticket_name" value="{{ request('ticket_name') }}" placeholder="Cari nama..." class="w-full bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-2">Event:</label>
+                        <select name="ticket_event_id" class="w-full bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm text-white">
+                            <option value="">Semua Event</option>
+                            @foreach($allEvents as $event)
+                                <option value="{{ $event->id }}" {{ request('ticket_event_id') == $event->id ? 'selected' : '' }}>{{ $event->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-2">Ketersediaan:</label>
+                        <select name="ticket_availability" class="w-full bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm text-white">
+                            <option value="">Semua</option>
+                            <option value="available" {{ request('ticket_availability') == 'available' ? 'selected' : '' }}>Tersedia</option>
+                            <option value="sold_out" {{ request('ticket_availability') == 'sold_out' ? 'selected' : '' }}>Sold Out</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded text-xs">Filter</button>
+                        <a href="{{ route('admin') }}" class="ml-2 bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded text-xs">Reset</a>
+                    </div>
+                </div>
+            </form>
         </div>
 
         <div class="overflow-x-auto">
@@ -351,6 +432,48 @@
                     + Add User
                 </a>
             </div>
+        </div>
+
+        <!-- User Filter Form (Plain) -->
+        <div class="p-6 border-b border-gray-800">
+            <form method="GET" action="{{ route('admin') }}">
+                <!-- Preserve existing filters -->
+                @if(request('status'))
+                    <input type="hidden" name="status" value="{{ request('status') }}">
+                @endif
+                @if(request('date_filter'))
+                    <input type="hidden" name="date_filter" value="{{ request('date_filter') }}">
+                @endif
+                @if(request('date_from'))
+                    <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                @endif
+                @if(request('date_to'))
+                    <input type="hidden" name="date_to" value="{{ request('date_to') }}">
+                @endif
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-2">Nama User:</label>
+                        <input type="text" name="user_name" value="{{ request('user_name') }}" placeholder="Cari nama..." class="w-full bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-2">Email:</label>
+                        <input type="text" name="user_email" value="{{ request('user_email') }}" placeholder="Cari email..." class="w-full bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-2">Role:</label>
+                        <select name="user_role" class="w-full bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm text-white">
+                            <option value="">Semua Role</option>
+                            <option value="admin" {{ request('user_role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="user" {{ request('user_role') == 'user' ? 'selected' : '' }}>User</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded text-xs">Filter</button>
+                        <a href="{{ route('admin') }}" class="ml-2 bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded text-xs">Reset</a>
+                    </div>
+                </div>
+            </form>
         </div>
 
         <div class="overflow-x-auto">

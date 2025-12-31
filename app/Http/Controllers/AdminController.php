@@ -56,9 +56,49 @@ class AdminController extends Controller
         
         // Limit 5 for dashboard preview
         $events = $eventsQuery->limit(5)->get();
-        $artists = Artist::withCount('events')->limit(5)->get();
-        $ticketTypes = TicketType::with('event')->limit(5)->get();
-        $users = User::withCount(['orders'])->limit(5)->get();
+        
+        // Artists query with filters
+        $artistsQuery = Artist::withCount('events');
+        if ($request->filled('artist_name')) {
+            $artistsQuery->where('name', 'LIKE', '%' . $request->artist_name . '%');
+        }
+        if ($request->filled('artist_genre')) {
+            $artistsQuery->where('genre', 'LIKE', '%' . $request->artist_genre . '%');
+        }
+        $artists = $artistsQuery->limit(5)->get();
+        
+        // Ticket Types query with filters
+        $ticketTypesQuery = TicketType::with('event');
+        if ($request->filled('ticket_name')) {
+            $ticketTypesQuery->where('name', 'LIKE', '%' . $request->ticket_name . '%');
+        }
+        if ($request->filled('ticket_event_id')) {
+            $ticketTypesQuery->where('event_id', $request->ticket_event_id);
+        }
+        if ($request->filled('ticket_availability')) {
+            if ($request->ticket_availability == 'available') {
+                $ticketTypesQuery->whereRaw('sold < quota');
+            } elseif ($request->ticket_availability == 'sold_out') {
+                $ticketTypesQuery->whereRaw('sold >= quota');
+            }
+        }
+        $ticketTypes = $ticketTypesQuery->limit(5)->get();
+        
+        // Users query with filters
+        $usersQuery = User::withCount(['orders']);
+        if ($request->filled('user_name')) {
+            $usersQuery->where('name', 'LIKE', '%' . $request->user_name . '%');
+        }
+        if ($request->filled('user_email')) {
+            $usersQuery->where('email', 'LIKE', '%' . $request->user_email . '%');
+        }
+        if ($request->filled('user_role')) {
+            $usersQuery->where('role', $request->user_role);
+        }
+        $users = $usersQuery->limit(5)->get();
+        
+        // Get all events for dropdown
+        $allEvents = Event::orderBy('title')->get();
         
         // Total counts
         $totalEvents = Event::count();
@@ -68,6 +108,6 @@ class AdminController extends Controller
         $totalTicketTypes = TicketType::count();
         $totalUsers = User::count();
         
-        return view('admin', compact('events', 'artists', 'ticketTypes', 'users', 'totalEvents', 'totalArtists', 'totalOrders', 'totalTickets', 'totalTicketTypes', 'totalUsers'));
+        return view('admin', compact('events', 'artists', 'ticketTypes', 'users', 'totalEvents', 'totalArtists', 'totalOrders', 'totalTickets', 'totalTicketTypes', 'totalUsers', 'allEvents'));
     }
 }
